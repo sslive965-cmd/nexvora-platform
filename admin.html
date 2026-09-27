@@ -260,7 +260,6 @@ async function checkAdmin(){
 }
 loadUsers();
   loadOrders();
-  loadpayments();
 document.getElementById("logoutBtn").onclick = async () => {
   await db.auth.signOut();
   window.location.href = "login.html";
