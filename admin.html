@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXVORA — Admin Panel</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  background:#010302;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.panel{
+  width:min(900px,92%);
+  padding:35px;
+  background:rgba(3,9,6,.92);
+  border:1px solid rgba(55,255,130,.45);
+  box-shadow:
+    0 0 45px rgba(0,255,100,.12),
+    inset 0 0 35px rgba(0,255,100,.035);
+}
+
+.logo{
+  text-align:center;
+  margin-bottom:35px;
+}
+
+.logo-symbol{
+  color:#42ff8b;
+  font-size:48px;
+  font-weight:900;
+  text-shadow:0 0 25px #42ff8b;
+}
+
+.logo-name{
+  margin-top:5px;
+  color:#fff;
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:5px;
+}
+
+.logo-sub{
+  color:#42ff8b;
+  font-size:9px;
+  letter-spacing:4px;
+  margin-top:6px;
+}
+
+.status{
+  padding:14px;
+  border:1px solid #214b31;
+  color:#42ff8b;
+  text-align:center;
+  margin-bottom:25px;
+  font-weight:bold;
+}
+
+.admin-content{
+  display:none;
+}
+
+h1{
+  color:#42ff8b;
+  font-size:25px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.info{
+  color:#83948a;
+  margin-bottom:25px;
+}
+
+.card{
+  padding:22px;
+  margin-top:15px;
+  border:1px solid rgba(66,255,139,.22);
+  background:#050b08;
+}
+
+.card h2{
+  color:#42ff8b;
+  font-size:16px;
+  margin-bottom:10px;
+}
+
+.card p{
+  color:#9aa9a0;
+  font-size:14px;
+}
+
+.logout{
+  margin-top:25px;
+  padding:12px 20px;
+  border:1px solid #42ff8b;
+  background:transparent;
+  color:#42ff8b;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.logout:hover{
+  background:#42ff8b;
+  color:#001006;
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+
+  <div class="logo">
+    <div class="logo-symbol">N</div>
+    <div class="logo-name">NEXVORA</div>
+    <div class="logo-sub">ADMIN CONTROL</div>
+  </div>
+
+  <div class="status" id="status">
+    VERIFYING ADMIN ACCESS...
+  </div>
+
+  <div class="admin-content" id="adminContent">
+
+    <h1>ADMIN PANEL</h1>
+
+    <p class="info">
+      Secure administrator control center.
+    </p>
+
+    <div class="card">
+      <h2>ADMIN ACCESS</h2>
+      <p>Role verified successfully from the NEXVORA profiles table.</p>
+    </div>
+
+    <div class="card">
+      <h2>ACCOUNT</h2>
+      <p id="adminEmail">Loading...</p>
+    </div>
+
+    <button class="logout" id="logoutBtn">
+      LOGOUT
+    </button>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://lkspavoccfcwgufmczzq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T";
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function checkAdmin(){
+
+  const status = document.getElementById("status");
+  const adminContent = document.getElementById("adminContent");
+  const adminEmail = document.getElementById("adminEmail");
+
+  const { data: { user }, error: userError } =
+    await db.auth.getUser();
+
+  if(userError || !user){
+    status.textContent = "ACCESS DENIED";
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1200);
+    return;
+  }
+
+  const { data: profile, error: profileError } =
+    await db
+      .from("profiles")
+      .select("role,email")
+      .eq("user_id", user.id)
+      .single();
+
+  if(profileError || !profile || profile.role !== "admin"){
+    status.textContent = "ACCESS DENIED";
+    setTimeout(() => {
+      window.location.href = "store.html";
+    }, 1200);
+    return;
+  }
+
+  status.textContent = "ADMIN ACCESS VERIFIED";
+  adminContent.style.display = "block";
+  adminEmail.textContent = profile.email;
+}
+
+document.getElementById("logoutBtn").onclick = async () => {
+  await db.auth.signOut();
+  window.location.href = "login.html";
+};
+
+checkAdmin();
+</script>
+
+</body>
+</html>
