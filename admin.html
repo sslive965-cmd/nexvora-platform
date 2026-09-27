@@ -258,6 +258,44 @@ document.getElementById("logoutBtn").onclick = async () => {
 };
 
 checkAdmin();
+ async function loadOrders(){
+
+  const ordersList = document.getElementById("ordersList");
+
+  const { data: orders, error } = await db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    ordersList.textContent = "Unable to load orders.";
+    return;
+  }
+
+  if(!orders || orders.length === 0){
+    ordersList.textContent = "No orders found.";
+    return;
+  }
+
+  ordersList.innerHTML = orders.map(order => `
+    <div style="
+      padding:15px 0;
+      border-top:1px solid rgba(66,255,139,.15);
+    ">
+      <div style="color:#42ff8b;font-weight:bold;">
+        ORDER #${order.id}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        STATUS: ${(order.status || "pending").toUpperCase()}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        AMOUNT: ${order.amount ?? "N/A"}
+      </div>
+    </div>
+  `).join("");
+ } 
 </script>
 
 </body>
