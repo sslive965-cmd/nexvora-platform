@@ -354,7 +354,7 @@ const password = document.getElementById("regPassword").value;
 loginForm.addEventListener("submit", async function(e){
   e.preventDefault();
 
-  const identifier = document.getElementById("loginIdentifier").value.trim();
+  const identifier = document.getElementById("loginUser").value.trim();
   const password = document.getElementById("loginPassword").value;
 
   if(!identifier || !password){
