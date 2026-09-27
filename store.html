@@ -544,8 +544,8 @@ function productCard(product){
     <div class="price">₹${formatPrice(product.price)}</div>
     ${renderCustomFields(product.custom_fields)}
     <div class="product-actions">
-      <a href="product.html" class="details">DETAILS</a>
-      <a href="payment.html" class="buy">BUY NOW</a>
+      <a href="product.html?id=${encodeURIComponent(product.id)}" class="details">DETAILS</a>
+      <a href="product.html?id=${encodeURIComponent(product.id)}" class="buy">BUY NOW</a>
     </div>
   </article>`;
 }
