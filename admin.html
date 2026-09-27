@@ -159,12 +159,15 @@ h1{
   <h2>ORDER MANAGEMENT</h2>
   <p>View and manage customer orders from the NEXVORA platform.</p>
   </div>
-  <div class="card">
-  <h2>PAYMENT MANAGEMENT</h2>
-  <p>Review and manage customer payment activity.</p>
-  </div>
   <div id="ordersList">
   Loading orders...
+  </div>
+    <div class="card">
+  <h2>PAYMENT MANAGEMENT</h2>
+  <p>Review and manage customer payment activity.</p>
+    </div>
+  <div id="paymentsList">
+  Loading payments...
   </div>
 </div>
     <button class="logout" id="logoutBtn">
@@ -257,6 +260,7 @@ async function checkAdmin(){
 }
 loadUsers();
   loadOrders();
+  loadpayments();
 document.getElementById("logoutBtn").onclick = async () => {
   await db.auth.signOut();
   window.location.href = "login.html";
