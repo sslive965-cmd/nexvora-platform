@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NEXVORA — Store</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#010302;
+  color:#f4fff9;
+  font-family:'Rajdhani',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-5;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(0,255,100,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,100,.035) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(58deg) scale(1.8);
+  transform-origin:center bottom;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-4;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(0,255,100,.13),transparent 30%),
+    linear-gradient(180deg,#000 0%,#020604 55%,#000 100%);
+}
+
+/* AURA */
+
+.aura{
+  position:fixed;
+  width:520px;
+  height:520px;
+  right:-120px;
+  top:100px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(0,255,100,.20),
+    rgba(0,255,100,.06) 38%,
+    transparent 70%);
+  filter:blur(15px);
+  animation:pulseAura 5s ease-in-out infinite;
+  pointer-events:none;
+  z-index:-2;
+}
+
+@keyframes pulseAura{
+  50%{
+    transform:scale(1.18);
+    opacity:.65;
+  }
+}
+
+/* NAVBAR */
+
+.navbar{
+  height:78px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  background:rgba(0,3,2,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(50,255,130,.22);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-mark{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  color:#48ff8c;
+  font-family:'Orbitron';
+  font-size:27px;
+  font-weight:900;
+  border:1px solid #39ff88;
+  clip-path:polygon(25% 0,100% 0,75% 100%,0 100%);
+  text-shadow:0 0 15px #39ff88;
+  box-shadow:0 0 18px rgba(57,255,136,.3);
+}
+
+.logo-name{
+  font-family:'Orbitron';
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+.logo-sub{
+  font-size:8px;
+  letter-spacing:4px;
+  color:#46ff91;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.nav-btn{
+  padding:10px 16px;
+  border:1px solid rgba(61,255,136,.35);
+  color:#b9c8c0;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:9px;
+  letter-spacing:1px;
+  transition:.3s;
+}
+
+.nav-btn:hover{
+  color:#42ff8b;
+  border-color:#42ff8b;
+  box-shadow:0 0 18px rgba(61,255,136,.18);
+}
+
+.balance{
+  padding:10px 16px;
+  color:#42ff8b;
+  border:1px solid #39ff88;
+  font-family:'Orbitron';
+  font-size:9px;
+  box-shadow:0 0 15px rgba(57,255,136,.12);
+}
+
+/* MAIN */
+
+.container{
+  width:min(1400px,90%);
+  margin:auto;
+  padding:70px 0 100px;
+}
+
+.system{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.system-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#42ff8b;
+  box-shadow:0 0 15px #42ff8b;
+  animation:blink 1.5s infinite;
+}
+
+@keyframes blink{
+  50%{opacity:.25}
+}
+
+h1{
+  margin-top:16px;
+  font-family:'Orbitron';
+  font-size:clamp(38px,5vw,70px);
+  line-height:1;
+  letter-spacing:-2px;
+}
+
+h1 span{
+  color:#42ff8b;
+  text-shadow:0 0 25px rgba(61,255,136,.35);
+}
+
+.subtitle{
+  margin-top:15px;
+  color:#77877f;
+  letter-spacing:2px;
+  font-size:14px;
+}
+
+/* PRODUCT GRID */
+
+.product-grid{
+  margin-top:55px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+}
+
+.product{
+  position:relative;
+  min-height:390px;
+  padding:20px;
+  background:linear-gradient(145deg,rgba(5,18,11,.94),rgba(0,3,2,.98));
+  border:1px solid rgba(61,255,136,.24);
+  overflow:hidden;
+  transition:.35s;
+}
+
+.product:hover{
+  transform:translateY(-8px);
+  border-color:#42ff8b;
+  box-shadow:0 0 30px rgba(61,255,136,.18);
+}
+
+.product::after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-90px;
+  bottom:-90px;
+  border-radius:50%;
+  background:rgba(61,255,136,.08);
+  filter:blur(30px);
+}
+
+.product-card{
+  height:190px;
+  padding:20px;
+  border:1px solid #42ff8b;
+  border-radius:15px;
+  background:linear-gradient(145deg,#08150d,#010201);
+  box-shadow:
+    0 0 22px rgba(61,255,136,.18),
+    inset 0 0 20px rgba(61,255,136,.05);
+  transform:perspective(700px) rotateY(-7deg);
+}
+
+.card-brand{
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:14px;
+  letter-spacing:2px;
+}
+
+.chip{
+  width:40px;
+  height:30px;
+  margin-top:35px;
+  border:1px solid #9dffbd;
+  border-radius:6px;
+  background:linear-gradient(135deg,#183b27,#79ff9e);
+}
+
+.card-number{
+  margin-top:20px;
+  font-family:'Orbitron';
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+.card-type{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  font-family:'Orbitron';
+  font-size:9px;
+  color:#9db0a5;
+}
+
+.product h2{
+  margin-top:20px;
+  font-family:'Orbitron';
+  font-size:15px;
+}
+
+.product-desc{
+  margin-top:5px;
+  color:#718078;
+  font-size:12px;
+}
+
+.price{
+  margin-top:14px;
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:22px;
+  font-weight:700;
+}
+
+.product-actions{
+  display:flex;
+  gap:8px;
+  margin-top:18px;
+}
+
+.product-actions a{
+  flex:1;
+  padding:11px 7px;
+  text-align:center;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:8px;
+  letter-spacing:.8px;
+}
+
+.buy{
+  background:#42ff8b;
+  color:#001006;
+}
+
+.details{
+  color:#dffff0;
+  border:1px solid rgba(61,255,136,.45);
+}
+
+.details:hover{
+  background:rgba(61,255,136,.12);
+}
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid rgba(61,255,136,.18);
+  padding:28px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#536158;
+  font-size:11px;
+}
+
+footer span{
+  color:#42ff8b;
+  font-family:'Orbitron';
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+  .product-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .navbar{
+    padding:0 18px;
+  }
+
+  .logo-name{
+    font-size:16px;
+  }
+
+  .nav-btn{
+    display:none;
+  }
+
+  .balance{
+    font-size:8px;
+    padding:9px 10px;
+  }
+
+  .container{
+    width:92%;
+    padding-top:45px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+  }
+
+  footer{
+    flex-direction:column;
+    gap:12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="aura"></div>
+
+<header class="navbar">
+
+  <div class="logo">
+    <div class="logo-mark">N</div>
+
+    <div>
+      <div class="logo-name">NEXVORA</div>
+      <div class="logo-sub">DIGITAL STORE</div>
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <div class="balance">BALANCE: ₹0</div>
+    <a href="dashboard.html" class="nav-btn">DASHBOARD</a>
+  </div>
+
+</header>
+
+<main class="container">
+
+  <div class="system">
+    <span class="system-dot"></span>
+    NEXVORA STORE ONLINE
+  </div>
+
+  <h1>
+    DIGITAL <span>STORE</span>
+  </h1>
+
+  <p class="subtitle">
+    SELECT YOUR DIGITAL ACCESS
+  </p>
+
+  <section class="product-grid">
+
+    <article class="product">
+
+      <div class="product-card">
+        <div class="card-brand">NEXVORA</div>
+        <div class="chip"></div>
+        <div class="card-number">**** **** **** 4821</div>
+
+        <div class="card-type">
+          <span>DIGITAL ACCESS</span>
+          <strong>VISA</strong>
+        </div>
+      </div>
+
+      <h2>VISA DIGITAL CARD</h2>
+
+      <p class="product-desc">
+        Worldwide digital access.
+      </p>
+
+      <div class="price">₹3,999</div>
+
+      <div class="product-actions">
+        <a href="product.html" class="details">DETAILS</a>
+        <a href="payment.html" class="buy">BUY NOW</a>
+      </div>
+
+    </article>
+
+
+    <article class="product">
+
+      <div class="product-card">
+        <div class="card-brand">NEXVORA</div>
+        <div class="chip"></div>
+        <div class="card-number">**** **** **** 7364</div>
+
+        <div class="card-type">
+          <span>DIGITAL ACCESS</span>
+          <strong>MASTER</strong>
+        </div>
+      </div>
+
+      <h2>MASTERCARD ACCESS</h2>
+
+      <p class="product-desc">
+        Global digital payment access.
+      </p>
+
+      <div class="price">₹4,999</div>
+
+      <div class="product-actions">
+        <a href="product.html" class="details">DETAILS</a>
+        <a href="payment.html" class="buy">BUY NOW</a>
+      </div>
+
+    </article>
+
+
+    <article class="product">
+
+      <div class="product-card">
+        <div class="card-brand">NEXVORA</div>
+        <div class="chip"></div>
+        <div class="card-number">**** **** **** 1029</div>
+
+        <div class="card-type">
+          <span>DIGITAL ACCESS</span>
+          <strong>RUPAY</strong>
+        </div>
+      </div>
+
+      <h2>RUPAY DIGITAL ACCESS</h2>
+
+      <p class="product-desc">
+        India-focused digital access.
+      </p>
+
+      <div class="price">₹2,999</div>
+
+      <div class="product-actions">
+        <a href="product.html" class="details">DETAILS</a>
+        <a href="payment.html" class="buy">BUY NOW</a>
+      </div>
+
+    </article>
+
+
+    <article class="product">
+
+      <div class="product-card">
+        <div class="card-brand">NEXVORA</div>
+        <div class="chip"></div>
+        <div class="card-number">**** **** **** 5587</div>
+
+        <div class="card-type">
+          <span>PREMIUM ACCESS</span>
+          <strong>AMEX</strong>
+        </div>
+      </div>
+
+      <h2>PREMIUM DIGITAL ACCESS</h2>
+
+      <p class="product-desc">
+        Premium global digital access.
+      </p>
+
+      <div class="price">₹5,999</div>
+
+      <div class="product-actions">
+        <a href="product.html" class="details">DETAILS</a>
+        <a href="payment.html" class="buy">BUY NOW</a>
+      </div>
+
+    </article>
+
+  </section>
+
+</main>
+
+<footer>
+  <div>NEXVORA DIGITAL STORE</div>
+  <span>● SYSTEM ONLINE</span>
+</footer>
+
+</body>
+</html>
