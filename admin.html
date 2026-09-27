@@ -257,9 +257,10 @@ async function checkAdmin(){
   status.textContent = "ADMIN ACCESS VERIFIED";
   adminContent.style.display = "block";
   adminEmail.textContent = profile.email;
+  loadUsers();
+loadOrders();
+loadPayments();
 }
-loadUsers();
-  loadOrders();
 document.getElementById("logoutBtn").onclick = async () => {
   await db.auth.signOut();
   window.location.href = "login.html";
