@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NEXVORA — Store</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#010302;
+  color:#f4fff9;
+  font-family:'Rajdhani',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-5;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(0,255,100,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,100,.035) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(58deg) scale(1.8);
+  transform-origin:center bottom;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-4;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(0,255,100,.13),transparent 30%),
+    linear-gradient(180deg,#000 0%,#020604 55%,#000 100%);
+}
+
+/* AURA */
+
+.aura{
+  position:fixed;
+  width:520px;
+  height:520px;
+  right:-120px;
+  top:100px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(0,255,100,.20),
+    rgba(0,255,100,.06) 38%,
+    transparent 70%);
+  filter:blur(15px);
+  animation:pulseAura 5s ease-in-out infinite;
+  pointer-events:none;
+  z-index:-2;
+}
+
+@keyframes pulseAura{
+  50%{
+    transform:scale(1.18);
+    opacity:.65;
+  }
+}
+
+/* NAVBAR */
+
+.navbar{
+  height:78px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  background:rgba(0,3,2,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(50,255,130,.22);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-mark{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  color:#48ff8c;
+  font-family:'Orbitron';
+  font-size:27px;
+  font-weight:900;
+  border:1px solid #39ff88;
+  clip-path:polygon(25% 0,100% 0,75% 100%,0 100%);
+  text-shadow:0 0 15px #39ff88;
+  box-shadow:0 0 18px rgba(57,255,136,.3);
+}
+
+.logo-name{
+  font-family:'Orbitron';
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+.logo-sub{
+  font-size:8px;
+  letter-spacing:4px;
+  color:#46ff91;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.nav-btn{
+  padding:10px 16px;
+  border:1px solid rgba(61,255,136,.35);
+  color:#b9c8c0;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:9px;
+  letter-spacing:1px;
+  transition:.3s;
+}
+
+.nav-btn:hover{
+  color:#42ff8b;
+  border-color:#42ff8b;
+  box-shadow:0 0 18px rgba(61,255,136,.18);
+}
+
+.balance{
+  padding:10px 16px;
+  color:#42ff8b;
+  border:1px solid #39ff88;
+  font-family:'Orbitron';
+  font-size:9px;
+  box-shadow:0 0 15px rgba(57,255,136,.12);
+}
+
+/* MAIN */
+
+.container{
+  width:min(1400px,90%);
+  margin:auto;
+  padding:70px 0 100px;
+}
+
+.system{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.system-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#42ff8b;
+  box-shadow:0 0 15px #42ff8b;
+  animation:blink 1.5s infinite;
+}
+
+@keyframes blink{
+  50%{opacity:.25}
+}
+
+h1{
+  margin-top:16px;
+  font-family:'Orbitron';
+  font-size:clamp(38px,5vw,70px);
+  line-height:1;
+  letter-spacing:-2px;
+}
+
+h1 span{
+  color:#42ff8b;
+  text-shadow:0 0 25px rgba(61,255,136,.35);
+}
+
+.subtitle{
+  margin-top:15px;
+  color:#77877f;
+  letter-spacing:2px;
+  font-size:14px;
+}
+
+/* PRODUCT GRID */
+
+.product-grid{
+  margin-top:55px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+}
+
+.product{
+  position:relative;
+  min-height:390px;
+  padding:20px;
+  background:linear-gradient(145deg,rgba(5,18,11,.94),rgba(0,3,2,.98));
+  border:1px solid rgba(61,255,136,.24);
+  overflow:hidden;
+  transition:.35s;
+}
+
+.product:hover{
+  transform:translateY(-8px);
+  border-color:#42ff8b;
+  box-shadow:0 0 30px rgba(61,255,136,.18);
+}
+
+.product::after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-90px;
+  bottom:-90px;
+  border-radius:50%;
+  background:rgba(61,255,136,.08);
+  filter:blur(30px);
+}
+
+.product-card{
+  height:190px;
+  padding:20px;
+  border:1px solid #42ff8b;
+  border-radius:15px;
+  background:linear-gradient(145deg,#08150d,#010201);
+  box-shadow:
+    0 0 22px rgba(61,255,136,.18),
+    inset 0 0 20px rgba(61,255,136,.05);
+  transform:perspective(700px) rotateY(-7deg);
+}
+
+.card-brand{
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:14px;
+  letter-spacing:2px;
+}
+
+.chip{
+  width:40px;
+  height:30px;
+  margin-top:35px;
+  border:1px solid #9dffbd;
+  border-radius:6px;
+  background:linear-gradient(135deg,#183b27,#79ff9e);
+}
+
+.card-number{
+  margin-top:20px;
+  font-family:'Orbitron';
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+.card-type{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  font-family:'Orbitron';
+  font-size:9px;
+  color:#9db0a5;
+}
+
+.product h2{
+  margin-top:20px;
+  font-family:'Orbitron';
+  font-size:15px;
+}
+
+.product-desc{
+  margin-top:5px;
+  color:#718078;
+  font-size:12px;
+}
+
+.price{
+  margin-top:14px;
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:22px;
+  font-weight:700;
+}
+
+.product-actions{
+  display:flex;
+  gap:8px;
+  margin-top:18px;
+}
+
+.product-actions a{
+  flex:1;
+  padding:11px 7px;
+  text-align:center;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:8px;
+  letter-spacing:.8px;
+}
+
+.buy{
+  background:#42ff8b;
+  color:#001006;
+}
+
+.details{
+  color:#dffff0;
+  border:1px solid rgba(61,255,136,.45);
+}
+
+.details:hover{
+  background:rgba(61,255,136,.12);
+}
+
+/* DYNAMIC PRODUCT MEDIA */
+
+.product-image{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  border:1px solid #42ff8b;
+  border-radius:15px;
+  box-shadow:0 0 22px rgba(61,255,136,.18);
+  background:#010201;
+}
+
+.custom-fields{
+  margin-top:10px;
+  color:#6f8178;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.custom-field{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(61,255,136,.08);
+  padding:3px 0;
+}
+
+.custom-field strong{
+  color:#9db0a5;
+}
+
+.empty-products{
+  grid-column:1/-1;
+  padding:35px 20px;
+  border:1px solid rgba(61,255,136,.2);
+  color:#77877f;
+  text-align:center;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:1px;
+}
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid rgba(61,255,136,.18);
+  padding:28px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#536158;
+  font-size:11px;
+}
+
+footer span{
+  color:#42ff8b;
+  font-family:'Orbitron';
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+  .product-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .navbar{
+    padding:0 18px;
+  }
+
+  .logo-name{
+    font-size:16px;
+  }
+
+  .nav-btn{
+    display:none;
+  }
+
+  .balance{
+    font-size:8px;
+    padding:9px 10px;
+  }
+
+  .container{
+    width:92%;
+    padding-top:45px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+  }
+
+  footer{
+    flex-direction:column;
+    gap:12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="aura"></div>
+
+<header class="navbar">
+
+  <div class="logo">
+    <div class="logo-mark">N</div>
+
+    <div>
+      <div class="logo-name">NEXVORA</div>
+      <div class="logo-sub">DIGITAL STORE</div>
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <div class="balance">BALANCE: ₹0</div>
+    <a href="dashboard.html" class="nav-btn">DASHBOARD</a>
+  </div>
+
+</header>
+
+<main class="container">
+
+  <div class="system">
+    <span class="system-dot"></span>
+    NEXVORA STORE ONLINE
+  </div>
+
+  <h1>
+    DIGITAL <span>STORE</span>
+  </h1>
+
+  <p class="subtitle">
+    SELECT YOUR DIGITAL ACCESS
+  </p>
+
+  <section class="product-grid" id="productGrid">
+    <div style="grid-column:1/-1;color:#42ff8b;font-family:'Orbitron';font-size:11px;letter-spacing:1px;padding:25px 0;">LOADING PRODUCTS...</div>
+  </section>
+
+</main>
+
+<footer>
+  <div>NEXVORA DIGITAL STORE</div>
+  <span>● SYSTEM ONLINE</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+
+const SUPABASE_URL='https://lkspavoccfcwgufmczzq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Dcahy9-eTRD5qe_5w1z8A_hhQEn_1T';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const productGrid=document.getElementById('productGrid');
+const balanceBox=document.querySelector('.balance');
+
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+function formatPrice(value){
+  return Number(value || 0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function renderCustomFields(fields){
+  if(!fields || typeof fields!=='object' || Array.isArray(fields) || Object.keys(fields).length===0) return '';
+  return `<div class="custom-fields">${Object.entries(fields).map(([key,value])=>{
+    const display=typeof value==='object' ? JSON.stringify(value) : String(value);
+    return `<div class="custom-field"><strong>${escapeHtml(key)}</strong><span>${escapeHtml(display)}</span></div>`;
+  }).join('')}</div>`;
+}
+
+function productCard(product){
+  const category=product.category || 'DIGITAL ACCESS';
+  const brand=product.brand || 'NEXVORA';
+  const image=product.image_url
+    ? `<img class="product-image" src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.name || 'Product')}">`
+    : `<div class="product-card">
+        <div class="card-brand">${escapeHtml(brand)}</div>
+        <div class="chip"></div>
+        <div class="card-number">NEXVORA ACCESS</div>
+        <div class="card-type">
+          <span>${escapeHtml(category)}</span>
+          <strong>${escapeHtml(brand)}</strong>
+        </div>
+      </div>`;
+
+  return `<article class="product">
+    ${image}
+    <h2>${escapeHtml(product.name || 'UNNAMED PRODUCT')}</h2>
+    <p class="product-desc">${escapeHtml(product.description || 'Digital access from NEXVORA.')}</p>
+    <div class="price">₹${formatPrice(product.price)}</div>
+    ${renderCustomFields(product.custom_fields)}
+    <div class="product-actions">
+      <a href="product.html" class="details">DETAILS</a>
+      <a href="payment.html" class="buy">BUY NOW</a>
+    </div>
+  </article>`;
+}
+
+async function loadProducts(){
+  productGrid.innerHTML='<div style="grid-column:1/-1;color:#42ff8b;font-family:'Orbitron';font-size:11px;letter-spacing:1px;padding:25px 0;">LOADING PRODUCTS...</div>';
+
+  const result=await db.from('products')
+    .select('id,name,description,price,image_url,category,brand,is_active,custom_fields')
+    .eq('is_active',true)
+    .order('created_at',{ascending:false});
+
+  if(result.error){
+    productGrid.innerHTML=`<div class="empty-products">${escapeHtml(result.error.message)}</div>`;
+    return;
+  }
+
+  const products=result.data || [];
+  if(!products.length){
+    productGrid.innerHTML='<div class="empty-products">NO ACTIVE PRODUCTS AVAILABLE.</div>';
+    return;
+  }
+
+  productGrid.innerHTML=products.map(productCard).join('');
+}
+
+async function loadBalance(){
+  const sessionResult=await db.auth.getSession();
+  const session=sessionResult.data.session;
+
+  if(!session){
+    balanceBox.textContent='BALANCE: ₹0.00';
+    return;
+  }
+
+  const result=await db.from('profiles')
+    .select('balance')
+    .eq('user_id',session.user.id)
+    .maybeSingle();
+
+  if(result.error || !result.data){
+    balanceBox.textContent='BALANCE: ₹0.00';
+    return;
+  }
+
+  balanceBox.textContent=`BALANCE: ₹${formatPrice(result.data.balance)}`;
+}
+
+async function refreshStore(){
+  await Promise.all([loadProducts(),loadBalance()]);
+}
+
+refreshStore();
+
+db.auth.onAuthStateChange(()=>{
+  loadBalance();
+});
+
+// Refresh the database balance when the customer returns to this page.
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden) loadBalance();
+});
+
+window.addEventListener('focus',loadBalance);
+</script>
+
+</body>
+</html>
