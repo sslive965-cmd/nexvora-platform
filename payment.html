@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXVORA — Payment</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% 30%,rgba(57,255,20,.08),transparent 35%),
+        linear-gradient(rgba(57,255,20,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(57,255,20,.035) 1px,transparent 1px),
+        #030504;
+    background-size:auto,50px 50px,50px 50px;
+    color:#eaffea;
+    font-family:'Rajdhani',sans-serif;
+}
+
+nav{
+    height:74px;
+    border-bottom:1px solid rgba(57,255,20,.25);
+    background:rgba(2,5,3,.9);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+}
+
+.logo{
+    font-family:'Orbitron',sans-serif;
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:3px;
+    color:#39ff14;
+    text-shadow:0 0 18px rgba(57,255,20,.5);
+}
+
+.back{
+    color:#b9d9b9;
+    text-decoration:none;
+    border:1px solid rgba(57,255,20,.25);
+    padding:9px 15px;
+    border-radius:6px;
+    font-family:'Orbitron',sans-serif;
+    font-size:10px;
+    letter-spacing:1px;
+}
+
+.container{
+    width:min(900px,92%);
+    margin:45px auto 70px;
+}
+
+.heading{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.heading small{
+    color:#39ff14;
+    font-family:'Orbitron',sans-serif;
+    letter-spacing:3px;
+    font-size:11px;
+}
+
+.heading h1{
+    margin-top:10px;
+    font-family:'Orbitron',sans-serif;
+    font-size:32px;
+    letter-spacing:2px;
+}
+
+.heading p{
+    margin-top:8px;
+    color:#7f907f;
+}
+
+/* PAYMENT BOX */
+.payment-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.panel{
+    background:rgba(4,8,5,.9);
+    border:1px solid rgba(57,255,20,.22);
+    border-radius:12px;
+    padding:25px;
+}
+
+.panel h2{
+    font-family:'Orbitron',sans-serif;
+    font-size:15px;
+    letter-spacing:1px;
+    margin-bottom:20px;
+}
+
+/* AMOUNT */
+.amount-label{
+    color:#728272;
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.amount{
+    margin:7px 0 22px;
+    font-family:'Orbitron',sans-serif;
+    font-size:36px;
+    color:#39ff14;
+    text-shadow:0 0 18px rgba(57,255,20,.3);
+}
+
+.upi{
+    padding:15px;
+    border:1px solid rgba(57,255,20,.2);
+    border-radius:7px;
+    background:rgba(57,255,20,.035);
+    margin-bottom:18px;
+}
+
+.upi span{
+    display:block;
+    color:#6e7d6e;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.upi strong{
+    color:#d9f8d9;
+    font-size:16px;
+    word-break:break-all;
+}
+
+/* QR */
+.qr{
+    width:220px;
+    height:220px;
+    margin:10px auto 15px;
+    border:1px solid rgba(57,255,20,.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#080b08;
+    text-align:center;
+    color:#697869;
+    padding:20px;
+}
+
+.qr-note{
+    text-align:center;
+    color:#667466;
+    font-size:12px;
+}
+
+/* FORM */
+label{
+    display:block;
+    color:#91a391;
+    font-size:12px;
+    letter-spacing:1px;
+    margin:17px 0 7px;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border-radius:6px;
+    border:1px solid rgba(57,255,20,.2);
+    outline:none;
+    background:#060906;
+    color:#eaffea;
+    font-family:'Rajdhani',sans-serif;
+    font-size:15px;
+}
+
+input:focus{
+    border-color:#39ff14;
+    box-shadow:0 0 12px rgba(57,255,20,.1);
+}
+
+.file-box{
+    border:1px dashed rgba(57,255,20,.28);
+    border-radius:7px;
+    padding:18px;
+    text-align:center;
+    color:#687768;
+    font-size:13px;
+}
+
+.file-box input{
+    border:0;
+    padding:0;
+    margin-top:10px;
+    background:transparent;
+}
+
+.verify{
+    width:100%;
+    margin-top:22px;
+    padding:14px;
+    border:0;
+    border-radius:6px;
+    background:#39ff14;
+    color:#020502;
+    font-family:'Orbitron',sans-serif;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    box-shadow:0 0 22px rgba(57,255,20,.18);
+}
+
+.notice{
+    margin-top:15px;
+    padding:12px;
+    border-left:2px solid #39ff14;
+    background:rgba(57,255,20,.035);
+    color:#718071;
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* MOBILE */
+@media(max-width:750px){
+    .payment-box{
+        grid-template-columns:1fr;
+    }
+
+    .heading h1{
+        font-size:26px;
+    }
+
+    .amount{
+        font-size:31px;
+    }
+
+    .qr{
+        width:200px;
+        height:200px;
+    }
+}
+
+@media(max-width:450px){
+    .logo{
+        font-size:19px;
+    }
+
+    nav{
+        padding:0 4%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">NEXVORA</div>
+    <a href="dashboard.html" class="back">← DASHBOARD</a>
+</nav>
+
+<main class="container">
+
+    <section class="heading">
+        <small>SECURE PAYMENT GATEWAY</small>
+        <h1>ADD BALANCE</h1>
+        <p>Submit your payment details for manual verification.</p>
+    </section>
+
+    <section class="payment-box">
+
+        <div class="panel">
+
+            <h2>PAYMENT DETAILS</h2>
+
+            <div class="amount-label">AMOUNT TO PAY</div>
+            <div class="amount">₹0</div>
+
+            <div class="upi">
+                <span>UPI ID</span>
+                <strong>jinwoo40054@ptaxis</strong>
+            </div>
+
+            <div class="qr">
+                <div>
+                    <strong>QR CODE</strong><br><br>
+                    Add your NEXVORA payment QR image here.
+                </div>
+            </div>
+
+            <div class="qr-note">
+                Scan the official QR using your UPI app and complete the payment.
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>VERIFY PAYMENT</h2>
+
+            <label for="amount">PAYMENT AMOUNT (₹)</label>
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+                min="1"
+                step="1"
+            >
+
+            <label for="utr">UTR / TRANSACTION ID</label>
+            <input
+                type="text"
+                id="utr"
+                placeholder="Enter transaction ID"
+                maxlength="100"
+            >
+
+            <label>PAYMENT SCREENSHOT</label>
+
+            <div class="file-box">
+                Upload your payment screenshot
+                <input type="file" accept="image/*">
+            </div>
+
+            <button class="verify" type="button">
+                SUBMIT FOR VERIFICATION
+            </button>
+
+            <div class="notice">
+                Your payment will remain pending until it is reviewed and verified by NEXVORA admin.
+                Balance is not credited automatically.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>
