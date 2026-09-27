@@ -1,1 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXVORA — Digital Access</title>
 
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:#010302;
+  color:#f4fff9;
+  font-family:'Rajdhani',sans-serif;
+  overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-5;
+  background:
+    linear-gradient(rgba(0,255,100,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,100,.035) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(58deg) scale(1.8);
+  transform-origin:center bottom;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-4;
+  background:
+    radial-gradient(circle at 65% 40%,rgba(0,255,100,.14),transparent 28%),
+    radial-gradient(circle at 15% 80%,rgba(0,255,100,.07),transparent 25%),
+    linear-gradient(180deg,#000 0%,#020604 50%,#000 100%);
+}
+
+/* ================= PARTICLES ================= */
+
+.particles{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.particle{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:#39ff88;
+  box-shadow:0 0 10px #39ff88;
+  border-radius:50%;
+  animation:float 8s linear infinite;
+  opacity:.6;
+}
+
+.p1{left:8%;top:70%;animation-delay:0s}
+.p2{left:17%;top:25%;animation-delay:2s}
+.p3{left:32%;top:80%;animation-delay:4s}
+.p4{left:48%;top:20%;animation-delay:1s}
+.p5{left:67%;top:70%;animation-delay:3s}
+.p6{left:82%;top:30%;animation-delay:5s}
+.p7{left:92%;top:75%;animation-delay:2s}
+
+@keyframes float{
+  0%{transform:translateY(30px);opacity:0}
+  20%{opacity:.7}
+  80%{opacity:.7}
+  100%{transform:translateY(-150px);opacity:0}
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  background:rgba(0,3,2,.72);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(50,255,130,.22);
+  z-index:100;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-mark{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  color:#48ff8c;
+  font-family:'Orbitron';
+  font-size:27px;
+  font-weight:900;
+  border:1px solid #39ff88;
+  clip-path:polygon(25% 0,100% 0,75% 100%,0 100%);
+  text-shadow:0 0 15px #39ff88;
+  box-shadow:0 0 18px rgba(57,255,136,.3);
+}
+
+.logo-name{
+  font-family:'Orbitron';
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+.logo-sub{
+  font-size:8px;
+  letter-spacing:4px;
+  color:#46ff91;
+  margin-top:2px;
+}
+
+.nav-links{
+  display:flex;
+  gap:38px;
+  align-items:center;
+}
+
+.nav-links a{
+  color:#b9c8c0;
+  text-decoration:none;
+  text-transform:uppercase;
+  font-family:'Orbitron';
+  font-size:11px;
+  letter-spacing:1px;
+  transition:.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  color:#42ff8b;
+  text-shadow:0 0 12px #42ff8b;
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.login{
+  color:#fff;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:11px;
+}
+
+.register{
+  padding:12px 25px;
+  border:1px solid #39ff88;
+  color:#54ff99;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:1px;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  box-shadow:inset 0 0 15px rgba(57,255,136,.06),
+             0 0 12px rgba(57,255,136,.15);
+  transition:.3s;
+}
+
+.register:hover{
+  background:#39ff88;
+  color:#001006;
+  box-shadow:0 0 25px rgba(57,255,136,.55);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  min-height:760px;
+  padding:145px 7% 70px;
+  display:grid;
+  grid-template-columns:43% 57%;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-content{
+  position:relative;
+  z-index:5;
+}
+
+.system{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:2px;
+  margin-bottom:22px;
+}
+
+.system-dot{
+  width:7px;
+  height:7px;
+  background:#42ff8b;
+  border-radius:50%;
+  box-shadow:0 0 15px #42ff8b;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  50%{opacity:.25;transform:scale(.65)}
+}
+
+.hero h1{
+  font-family:'Orbitron';
+  font-size:clamp(48px,5vw,82px);
+  line-height:.98;
+  letter-spacing:-3px;
+  text-transform:uppercase;
+  font-weight:800;
+}
+
+.hero h1 span{
+  color:#3dff88;
+  text-shadow:0 0 25px rgba(61,255,136,.4);
+}
+
+.hero-desc{
+  margin-top:25px;
+  max-width:470px;
+  color:#9caea5;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.buttons{
+  display:flex;
+  gap:15px;
+  margin-top:35px;
+}
+
+.btn{
+  padding:15px 28px;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:1px;
+  text-decoration:none;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-main{
+  color:#001006;
+  background:#3dff88;
+  box-shadow:0 0 25px rgba(61,255,136,.35);
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+}
+
+.btn-main:hover{
+  box-shadow:0 0 45px rgba(61,255,136,.7);
+  transform:translateY(-3px);
+}
+
+.btn-outline{
+  color:#eafff1;
+  border:1px solid #39ff88;
+  background:rgba(0,20,10,.25);
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+}
+
+.btn-outline:hover{
+  background:rgba(57,255,136,.12);
+  box-shadow:0 0 20px rgba(57,255,136,.2);
+}
+
+.features{
+  display:flex;
+  gap:28px;
+  margin-top:45px;
+}
+
+.feature{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#9db0a5;
+  font-size:13px;
+}
+
+.feature b{
+  color:#42ff8b;
+  font-size:18px;
+}
+
+/* ================= HERO VISUAL ================= */
+
+.hero-visual{
+  position:relative;
+  height:540px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.aura{
+  position:absolute;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(0,255,100,.28),
+    rgba(0,255,100,.08) 35%,
+    transparent 68%);
+  filter:blur(12px);
+  animation:auraPulse 5s ease-in-out infinite;
+}
+
+@keyframes auraPulse{
+  50%{transform:scale(1.15);opacity:.65}
+}
+
+/* abstract warrior silhouette */
+.warrior{
+  position:absolute;
+  width:240px;
+  height:420px;
+  opacity:.72;
+  filter:drop-shadow(0 0 25px rgba(40,255,120,.28));
+  animation:warriorFloat 6s ease-in-out infinite;
+}
+
+@keyframes warriorFloat{
+  50%{transform:translateY(-13px)}
+}
+
+.head{
+  position:absolute;
+  top:25px;
+  left:80px;
+  width:85px;
+  height:100px;
+  background:linear-gradient(145deg,#07110c,#000);
+  clip-path:polygon(25% 0,75% 0,100% 30%,88% 100%,35% 92%,0 45%);
+  border:1px solid rgba(61,255,136,.3);
+}
+
+.eye{
+  position:absolute;
+  top:67px;
+  left:143px;
+  width:22px;
+  height:3px;
+  background:#3dff88;
+  box-shadow:0 0 18px #3dff88;
+  transform:rotate(-15deg);
+}
+
+.body{
+  position:absolute;
+  top:110px;
+  left:35px;
+  width:175px;
+  height:290px;
+  background:linear-gradient(145deg,#08120d,#010201 55%,#0b1d13);
+  clip-path:polygon(30% 0,70% 0,100% 35%,78% 100%,22% 100%,0 35%);
+  border:1px solid rgba(61,255,136,.2);
+}
+
+.aura-ring{
+  position:absolute;
+  width:520px;
+  height:150px;
+  border:1px solid rgba(61,255,136,.28);
+  border-radius:50%;
+  transform:rotate(-18deg);
+  box-shadow:0 0 35px rgba(61,255,136,.12);
+  animation:ring 8s linear infinite;
+}
+
+@keyframes ring{
+  to{transform:rotate(342deg)}
+}
+
+/* ================= CARD ================= */
+
+.digital-card{
+  position:absolute;
+  right:2%;
+  width:420px;
+  height:250px;
+  padding:27px;
+  background:
+    linear-gradient(135deg,rgba(5,18,11,.95),rgba(0,3,2,.98));
+  border:1px solid #42ff8b;
+  border-radius:18px;
+  box-shadow:
+    0 0 25px rgba(61,255,136,.35),
+    inset 0 0 30px rgba(61,255,136,.05);
+  transform:perspective(900px) rotateY(-18deg) rotateX(7deg) rotateZ(3deg);
+  animation:cardFloat 5s ease-in-out infinite;
+  z-index:4;
+}
+
+@keyframes cardFloat{
+  50%{transform:perspective(900px) rotateY(-12deg) rotateX(3deg) rotateZ(1deg) translateY(-15px)}
+}
+
+.card-logo{
+  font-family:'Orbitron';
+  font-size:18px;
+  color:#52ff97;
+  letter-spacing:2px;
+}
+
+.chip{
+  width:42px;
+  height:32px;
+  border-radius:7px;
+  border:1px solid #9dffbd;
+  margin-top:48px;
+  background:linear-gradient(135deg,#183b27,#79ff9e);
+  box-shadow:0 0 12px rgba(61,255,136,.3);
+}
+
+.card-number{
+  margin-top:22px;
+  font-family:'Orbitron';
+  letter-spacing:4px;
+  font-size:17px;
+}
+
+.card-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-top:22px;
+}
+
+.card-type{
+  font-family:'Orbitron';
+  font-size:23px;
+  font-style:italic;
+}
+
+.card2{
+  right:8%;
+  transform:perspective(900px) rotateY(-22deg) rotateX(8deg) rotateZ(8deg) translate(35px,35px);
+  opacity:.35;
+  z-index:2;
+}
+
+.card3{
+  right:12%;
+  transform:perspective(900px) rotateY(-24deg) rotateX(10deg) rotateZ(12deg) translate(65px,65px);
+  opacity:.18;
+  z-index:1;
+}
+
+/* ================= STATUS ================= */
+
+.statusbar{
+  height:38px;
+  border-top:1px solid rgba(61,255,136,.2);
+  border-bottom:1px solid rgba(61,255,136,.2);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 8%;
+  background:rgba(0,10,5,.7);
+  font-family:'Orbitron';
+  font-size:8px;
+  letter-spacing:1px;
+  color:#718078;
+}
+
+.statusbar span{
+  color:#42ff8b;
+}
+
+/* ================= PRODUCTS ================= */
+
+.products{
+  padding:95px 8%;
+  position:relative;
+}
+
+.section-label{
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:3px;
+}
+
+.products h2{
+  font-family:'Orbitron';
+  font-size:42px;
+  margin-top:10px;
+}
+
+.products h2 span{
+  color:#42ff8b;
+}
+
+.product-sub{
+  color:#738078;
+  letter-spacing:3px;
+  margin-top:8px;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  margin-top:45px;
+}
+
+.product{
+  position:relative;
+  padding:22px;
+  min-height:330px;
+  background:rgba(4,10,7,.85);
+  border:1px solid rgba(61,255,136,.25);
+  transition:.35s;
+  overflow:hidden;
+}
+
+.product::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(61,255,136,.07),transparent);
+  transform:translateX(-100%);
+  transition:.6s;
+}
+
+.product:hover{
+  transform:translateY(-8px);
+  border-color:#42ff8b;
+  box-shadow:0 0 30px rgba(61,255,136,.15);
+}
+
+.product:hover::before{
+  transform:translateX(100%);
+}
+
+.mini-card{
+  height:155px;
+  border:1px solid #39ff88;
+  border-radius:10px;
+  padding:18px;
+  background:linear-gradient(145deg,#07140d,#010201);
+  box-shadow:0 0 18px rgba(61,255,136,.16);
+}
+
+.mini-card .card-logo{
+  font-size:12px;
+}
+
+.mini-chip{
+  width:30px;
+  height:22px;
+  background:#54ff95;
+  border-radius:5px;
+  margin-top:32px;
+}
+
+.mini-number{
+  margin-top:18px;
+  font-family:'Orbitron';
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.product h3{
+  font-family:'Orbitron';
+  font-size:14px;
+  margin-top:18px;
+}
+
+.product p{
+  color:#728077;
+  margin-top:4px;
+  font-size:12px;
+}
+
+.price{
+  color:#42ff8b;
+  font-family:'Orbitron';
+  font-size:20px;
+  margin-top:12px;
+}
+
+.details{
+  display:block;
+  margin-top:15px;
+  padding:10px;
+  border:1px solid rgba(61,255,136,.4);
+  text-align:center;
+  color:#dffff0;
+  text-decoration:none;
+  font-family:'Orbitron';
+  font-size:9px;
+  transition:.3s;
+}
+
+.details:hover{
+  background:#39ff88;
+  color:#001006;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  border-top:1px solid rgba(61,255,136,.2);
+  padding:35px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#010302;
+}
+
+.footer-logo{
+  font-family:'Orbitron';
+  color:#42ff8b;
+  font-size:18px;
+  letter-spacing:2px;
+}
+
+footer p{
+  color:#536158;
+  font-size:11px;
+}
+
+.footer-links{
+  display:flex;
+  gap:25px;
+}
+
+.footer-links a{
+  color:#748078;
+  text-decoration:none;
+  font-size:11px;
+}
+
+.footer-links a:hover{
+  color:#42ff8b;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .hero-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .hero-visual{
+    height:480px;
+  }
+
+  .product-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .features{
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+}
+
+@media(max-width:600px){
+
+  .navbar{
+    padding:0 20px;
+  }
+
+  .logo-name{
+    font-size:16px;
+  }
+
+  .login{
+    display:none;
+  }
+
+  .hero{
+    padding:120px 20px 40px;
+  }
+
+  .hero h1{
+    font-size:43px;
+  }
+
+  .hero-visual{
+    transform:scale(.72);
+    margin-top:-50px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+  }
+
+  footer{
+    flex-direction:column;
+    gap:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="particles">
+  <i class="particle p1"></i>
+  <i class="particle p2"></i>
+  <i class="particle p3"></i>
+  <i class="particle p4"></i>
+  <i class="particle p5"></i>
+  <i class="particle p6"></i>
+  <i class="particle p7"></i>
+</div>
+
+<!-- NAVIGATION -->
+<header class="navbar">
+
+  <div class="logo">
+    <div class="logo-mark">N</div>
+    <div>
+      <div class="logo-name">NEXVORA</div>
+      <div class="logo-sub">DIGITAL ACCESS</div>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#products">Store</a>
+    <a href="#how">How It Works</a>
+    <a href="#support">Support</a>
+  </nav>
+
+  <div class="nav-right">
+    <a href="login.html" class="login">LOGIN</a>
+    <a href="register.html" class="register">REGISTER</a>
+  </div>
+
+</header>
+
+
+<!-- HERO -->
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="system">
+      <span class="system-dot"></span>
+      NEXVORA SYSTEM ONLINE
+    </div>
+
+    <h1>
+      ENTER THE<br>
+      <span>DIGITAL</span><br>
+      NETWORK
+    </h1>
+
+    <p class="hero-desc">
+      Secure digital access built for the next generation.
+      Enter a futuristic platform designed around speed,
+      control and a completely new digital experience.
+    </p>
+
+    <div class="buttons">
+      <a href="login.html" class="btn btn-main">
+        ENTER PLATFORM →
+      </a>
+
+      <a href="#products" class="btn btn-outline">
+        EXPLORE PRODUCTS
+      </a>
+    </div>
+
+    <div class="features">
+      <div class="feature"><b>◉</b> SECURE ACCESS</div>
+      <div class="feature"><b>ϟ</b> FAST DELIVERY</div>
+      <div class="feature"><b>◌</b> 24/7 SUPPORT</div>
+    </div>
+
+  </div>
+
+
+  <!-- FUTURISTIC VISUAL -->
+  <div class="hero-visual">
+
+    <div class="aura"></div>
+    <div class="aura-ring"></div>
+
+    <div class="warrior">
+      <div class="head"></div>
+      <div class="eye"></div>
+      <div class="body"></div>
+    </div>
+
+    <div class="digital-card card3">
+      <div class="card-logo">NEXVORA</div>
+      <div class="chip"></div>
+    </div>
+
+    <div class="digital-card card2">
+      <div class="card-logo">NEXVORA</div>
+      <div class="chip"></div>
+    </div>
+
+    <div class="digital-card">
+      <div class="card-logo">NEXVORA</div>
+      <div class="chip"></div>
+      <div class="card-number">**** **** **** 4821</div>
+      <div class="card-bottom">
+        <small>DIGITAL ACCESS</small>
+        <div class="card-type">VISA</div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div>NEXVORA NETWORK</div>
+  <div><span>● SYSTEM STATUS: ONLINE</span></div>
+  <div>SECURE CONNECTION</div>
+  <div>V1.0.0</div>
+</div>
+
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+
+  <div class="section-label">// OUR PRODUCTS</div>
+
+  <h2>AVAILABLE <span>PRODUCTS</span></h2>
+
+  <div class="product-sub">
+    SELECT YOUR DIGITAL ACCESS
+  </div>
+
+  <div class="product-grid">
+
+    <div class="product">
+      <div class="mini-card">
+        <div class="card-logo">NEXVORA</div>
+        <div class="mini-chip"></div>
+        <div class="mini-number">**** 4821</div>
+      </div>
+      <h3>VISA CARD</h3>
+      <p>Worldwide Access</p>
+      <div class="price">$50</div>
+      <a href="login.html" class="details">VIEW DETAILS →</a>
+    </div>
+
+    <div class="product">
+      <div class="mini-card">
+        <div class="card-logo">NEXVORA</div>
+        <div class="mini-chip"></div>
+        <div class="mini-number">**** 7364</div>
+      </div>
+      <h3>MASTERCARD</h3>
+      <p>Global Payments</p>
+      <div class="price">$60</div>
+      <a href="login.html" class="details">VIEW DETAILS →</a>
+    </div>
+
+    <div class="product">
+      <div class="mini-card">
+        <div class="card-logo">NEXVORA</div>
+        <div class="mini-chip"></div>
+        <div class="mini-number">**** 1029</div>
+      </div>
+      <h3>RUPAY CARD</h3>
+      <p>India's Trusted Network</p>
+      <div class="price">$45</div>
+      <a href="login.html" class="details">VIEW DETAILS →</a>
+    </div>
+
+    <div class="product">
+      <div class="mini-card">
+        <div class="card-logo">NEXVORA</div>
+        <div class="mini-chip"></div>
+        <div class="mini-number">**** 5587</div>
+      </div>
+      <h3>AMERICAN EXPRESS</h3>
+      <p>Premium Global Access</p>
+      <div class="price">$70</div>
+      <a href="login.html" class="details">VIEW DETAILS →</a>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+
+  <div>
+    <div class="footer-logo">NEXVORA</div>
+    <p>DIGITAL ACCESS PLATFORM</p>
+  </div>
+
+  <div class="footer-links">
+    <a href="#">HOME</a>
+    <a href="#products">PRODUCTS</a>
+    <a href="#">SUPPORT</a>
+    <a href="#">TERMS</a>
+    <a href="#">PRIVACY</a>
+  </div>
+
+  <p style="color:#42ff8b;">● SYSTEM ONLINE</p>
+
+</footer>
+
+</body>
+  </html>
