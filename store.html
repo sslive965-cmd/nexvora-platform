@@ -551,7 +551,7 @@ function productCard(product){
 }
 
 async function loadProducts(){
-  productGrid.innerHTML='<div style="grid-column:1/-1;color:#42ff8b;font-family:'Orbitron';font-size:11px;letter-spacing:1px;padding:25px 0;">LOADING PRODUCTS...</div>';
+  productGrid.innerHTML='<div style="grid-column:1/-1;color:#42ff8b;font-family:Orbitron;font-size:11px;letter-spacing:1px;padding:25px 0;">LOADING PRODUCTS...</div>';
 
   const result=await db.from('products')
     .select('id,name,description,price,image_url,category,brand,is_active,custom_fields')
