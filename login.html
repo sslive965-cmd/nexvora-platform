@@ -283,11 +283,19 @@ input:focus{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const loginTab=document.getElementById("loginTab");
-const registerTab=document.getElementById("registerTab");
-const loginForm=document.getElementById("loginForm");
-const registerForm=document.getElementById("registerForm");
+const SUPABASE_URL = "https://lkspavoccfcwgufmczzq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T";
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
 
 function showRegister(){
   loginForm.classList.add("hidden");
@@ -303,20 +311,72 @@ function showLogin(){
   loginTab.classList.add("active");
 }
 
-registerTab.onclick=showRegister;
-loginTab.onclick=showLogin;
-document.getElementById("toRegister").onclick=showRegister;
-document.getElementById("toLogin").onclick=showLogin;
+registerTab.onclick = showRegister;
+loginTab.onclick = showLogin;
 
-/* Backend/auth will be connected next */
-loginForm.addEventListener("submit",function(e){
+document.getElementById("toRegister").onclick = showRegister;
+document.getElementById("toLogin").onclick = showLogin;
+
+
+/* REGISTER */
+registerForm.addEventListener("submit", async function(e){
   e.preventDefault();
-  alert("Login system will be connected in the next build step.");
+
+  const username = document.getElementById("registerUsername").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
+
+  if(!username || !email || !password){
+    alert("Please fill all fields.");
+    return;
+  }
+
+  const { data, error } = await db.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        username: username
+      }
+    }
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Registration successful. You can now login.");
+  showLogin();
 });
 
-registerForm.addEventListener("submit",function(e){
+
+/* LOGIN */
+loginForm.addEventListener("submit", async function(e){
   e.preventDefault();
-  alert("Registration system will be connected in the next build step.");
+
+  const identifier = document.getElementById("loginIdentifier").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if(!identifier || !password){
+    alert("Please enter your login details.");
+    return;
+  }
+
+  /* Current connection uses email login.
+     Username login will be connected after the profile table is created. */
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email: identifier,
+    password: password
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  window.location.href = "store.html";
 });
 </script>
 
