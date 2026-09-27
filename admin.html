@@ -266,6 +266,52 @@ document.getElementById("logoutBtn").onclick = async () => {
 };
 
 checkAdmin();
+  async function loadPayments(){
+
+  const paymentsList = document.getElementById("paymentsList");
+
+  const { data: payments, error } = await db
+    .from("payment_submissions")
+    .select("id,created_at,username,amount,utr,status,screenshot_url")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    paymentsList.textContent = "Unable to load payments.";
+    return;
+  }
+
+  if(!payments || payments.length === 0){
+    paymentsList.textContent = "No payment submissions found.";
+    return;
+  }
+
+  paymentsList.innerHTML = payments.map(payment => `
+    <div style="
+      padding:15px 0;
+      border-top:1px solid rgba(66,255,139,.15);
+    ">
+      <div style="color:#42ff8b;font-weight:bold;">
+        PAYMENT #${payment.id}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        USER: ${payment.username || "N/A"}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        AMOUNT: ${payment.amount ?? "N/A"}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        UTR: ${payment.utr || "N/A"}
+      </div>
+
+      <div style="color:#9aa9a0;margin-top:5px;">
+        STATUS: ${(payment.status || "pending").toUpperCase()}
+      </div>
+    </div>
+  `).join("");
+  }
  async function loadOrders(){
 
   const ordersList = document.getElementById("ordersList");
