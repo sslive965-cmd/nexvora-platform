@@ -152,7 +152,10 @@ h1{
     </div>
 <div class="card">
   <h2>USER MANAGEMENT</h2>
-  <p>Manage and review NEXVORA customer accounts.</p>
+
+  <div id="usersList">
+    Loading users...
+  </div>
 </div>
     <button class="logout" id="logoutBtn">
       LOGOUT
@@ -170,7 +173,42 @@ const SUPABASE_KEY = "sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T";
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+async function loadUsers(){
 
+  const usersList = document.getElementById("usersList");
+
+  const { data: users, error } = await db
+    .from("profiles")
+    .select("username,email,role")
+    .order("username", { ascending: true });
+
+  if(error){
+    usersList.textContent = "Unable to load users.";
+    return;
+  }
+
+  if(!users || users.length === 0){
+    usersList.textContent = "No registered users found.";
+    return;
+  }
+
+  usersList.innerHTML = users.map(user => `
+    <div style="
+      padding:15px 0;
+      border-top:1px solid rgba(66,255,139,.15);
+    ">
+      <div style="color:#42ff8b;font-weight:bold;">
+        ${user.username || "N/A"}
+      </div>
+      <div style="color:#9aa9a0;margin-top:5px;">
+        ${user.email || "N/A"}
+      </div>
+      <div style="color:#83948a;margin-top:5px;font-size:12px;">
+        ROLE: ${(user.role || "customer").toUpperCase()}
+      </div>
+    </div>
+  `).join("");
+}
 async function checkAdmin(){
 
   const status = document.getElementById("status");
