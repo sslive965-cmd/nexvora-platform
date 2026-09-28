@@ -6,6 +6,7 @@
 <title>NEXVORA — Payment</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -271,6 +272,48 @@ input:focus{
         padding:0 4%;
     }
 }
+
+.upi-app-btn{
+    width:100%;
+    margin-top:14px;
+    padding:13px;
+    border:1px solid rgba(57,255,20,.45);
+    border-radius:6px;
+    background:rgba(57,255,20,.08);
+    color:#39ff14;
+    font-family:'Orbitron',sans-serif;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    box-shadow:0 0 18px rgba(57,255,20,.08);
+}
+.upi-app-btn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+.product-info{
+    margin-bottom:18px;
+    padding:12px 14px;
+    border:1px solid rgba(57,255,20,.18);
+    border-radius:7px;
+    background:rgba(57,255,20,.025);
+}
+.product-info span{
+    display:block;
+    color:#6e7d6e;
+    font-size:11px;
+    margin-bottom:4px;
+}
+.product-info strong{
+    color:#d9f8d9;
+    font-size:15px;
+}
+.status-text{
+    margin-top:10px;
+    color:#718071;
+    font-size:12px;
+}
+
 </style>
 </head>
 
@@ -295,8 +338,12 @@ input:focus{
 
             <h2>PAYMENT DETAILS</h2>
 
+            <div class="product-info" id="productInfo" style="display:none;">
+                <span>PRODUCT</span>
+                <strong id="productName">Loading...</strong>
+            </div>
             <div class="amount-label">AMOUNT TO PAY</div>
-            <div class="amount">₹0</div>
+            <div class="amount" id="displayAmount">₹0</div>
 
             <div class="upi">
                 <span>UPI ID</span>
@@ -311,6 +358,11 @@ input:focus{
                 Scan the official QR using your UPI app and complete the payment.
             </div>
 
+            <button class="upi-app-btn" id="upiAppBtn" type="button" disabled>
+                PAY VIA UPI APP
+            </button>
+            <div class="status-text" id="productStatus"></div>
+
         </div>
 
         <div class="panel">
@@ -321,9 +373,10 @@ input:focus{
             <input
                 type="number"
                 id="amount"
-                placeholder="Enter amount"
+                placeholder="Loading product price..."
                 min="1"
                 step="1"
+                readonly
             >
 
             <label for="utr">UTR / TRANSACTION ID</label>
@@ -355,6 +408,112 @@ input:focus{
     </section>
 
 </main>
+
+
+<script>
+const SUPABASE_URL = "https://lkspavoccfcwgufmczzq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA";
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("product_id") || params.get("id");
+
+const displayAmount = document.getElementById("displayAmount");
+const amountInput = document.getElementById("amount");
+const productInfo = document.getElementById("productInfo");
+const productName = document.getElementById("productName");
+const productStatus = document.getElementById("productStatus");
+const upiAppBtn = document.getElementById("upiAppBtn");
+const pageTitle = document.getElementById("pageTitle");
+const pageSubtitle = document.getElementById("pageSubtitle");
+
+let productPrice = null;
+
+function setStatus(message, isError = false) {
+    productStatus.textContent = message;
+    productStatus.style.color = isError ? "#ff6b6b" : "#718071";
+}
+
+function formatINR(value) {
+    return "₹" + Number(value).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+async function loadProductPayment() {
+    if (!productId) {
+        pageTitle.textContent = "ADD BALANCE";
+        pageSubtitle.textContent = "Submit your payment details for manual verification.";
+        amountInput.readOnly = false;
+        amountInput.placeholder = "Enter amount";
+        upiAppBtn.style.display = "none";
+        setStatus("");
+        return;
+    }
+
+    setStatus("Loading product price...");
+
+    const { data, error } = await supabaseClient
+        .from("products")
+        .select("id,name,price,is_active")
+        .eq("id", productId)
+        .maybeSingle();
+
+    if (error || !data) {
+        setStatus("Product could not be loaded.", true);
+        amountInput.value = "";
+        return;
+    }
+
+    if (data.is_active === false) {
+        setStatus("This product is currently unavailable.", true);
+        amountInput.value = "";
+        return;
+    }
+
+    const price = Number(data.price);
+    if (!Number.isFinite(price) || price <= 0) {
+        setStatus("Invalid product price.", true);
+        amountInput.value = "";
+        return;
+    }
+
+    productPrice = price;
+
+    pageTitle.textContent = "PRODUCT PAYMENT";
+    pageSubtitle.textContent = "Pay the exact price of the selected product.";
+    productInfo.style.display = "block";
+    productName.textContent = data.name || "NEXVORA Product";
+
+    displayAmount.textContent = formatINR(productPrice);
+    amountInput.value = productPrice.toFixed(2);
+    amountInput.readOnly = true;
+
+    upiAppBtn.disabled = false;
+    setStatus("Amount loaded directly from the selected product.");
+}
+
+upiAppBtn.addEventListener("click", function () {
+    if (!productPrice || !productId) return;
+
+    const pa = "jinwoo40054@ptaxis";
+    const pn = "NEXVORA";
+    const am = Number(productPrice).toFixed(2);
+    const upiUrl =
+        "upi://pay?pa=" + encodeURIComponent(pa) +
+        "&pn=" + encodeURIComponent(pn) +
+        "&am=" + encodeURIComponent(am) +
+        "&cu=INR";
+
+    window.location.href = upiUrl;
+});
+
+loadProductPayment();
+</script>
 
 </body>
 </html>
