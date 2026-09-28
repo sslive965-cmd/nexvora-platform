@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXVORA — Orders</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% 35%,rgba(57,255,20,.08),transparent 35%),
+        linear-gradient(rgba(57,255,20,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(57,255,20,.035) 1px,transparent 1px),
+        #030504;
+    background-size:auto,50px 50px,50px 50px;
+    color:#eaffea;
+    font-family:'Rajdhani',sans-serif;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    width:420px;height:420px;border-radius:50%;
+    background:rgba(57,255,20,.06);
+    filter:blur(80px);
+    top:20%;left:50%;
+    transform:translateX(-50%);
+    pointer-events:none;
+}
+
+nav{
+    height:74px;
+    border-bottom:1px solid rgba(57,255,20,.25);
+    background:rgba(2,5,3,.88);
+    backdrop-filter:blur(12px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    position:sticky;top:0;z-index:10;
+}
+
+.logo{
+    font-family:'Orbitron',sans-serif;
+    font-size:24px;font-weight:800;letter-spacing:3px;
+    color:#39ff14;
+    text-shadow:0 0 18px rgba(57,255,20,.55);
+}
+
+.nav-right{display:flex;align-items:center;gap:14px}
+
+.nav-btn{
+    text-decoration:none;
+    color:#b9d9b9;
+    border:1px solid rgba(57,255,20,.22);
+    padding:9px 15px;border-radius:6px;
+    font-family:'Orbitron',sans-serif;
+    font-size:11px;letter-spacing:1px;
+}
+
+.nav-btn:hover{
+    color:#39ff14;border-color:#39ff14;
+    box-shadow:0 0 15px rgba(57,255,20,.18);
+}
+
+.container{
+    width:min(1150px,92%);
+    margin:45px auto 70px;
+}
+
+.heading{margin-bottom:28px}
+.heading small{
+    color:#39ff14;font-family:'Orbitron',sans-serif;
+    letter-spacing:3px;font-size:11px;
+}
+.heading h1{
+    margin-top:8px;font-family:'Orbitron',sans-serif;
+    font-size:34px;letter-spacing:2px;
+}
+.heading p{margin-top:8px;color:#809080;font-size:16px}
+
+.panel{
+    border:1px solid rgba(57,255,20,.2);
+    background:rgba(5,9,6,.82);
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 0 25px rgba(57,255,20,.05);
+}
+
+.status{
+    color:#718171;
+    font-size:14px;
+    margin-bottom:16px;
+}
+
+.order{
+    border:1px solid rgba(57,255,20,.18);
+    background:rgba(3,6,4,.8);
+    border-radius:9px;
+    padding:18px;
+    margin-bottom:14px;
+}
+
+.order:last-child{margin-bottom:0}
+
+.order-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.order-id{
+    font-family:'Orbitron',sans-serif;
+    color:#39ff14;
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.badge{
+    border:1px solid rgba(57,255,20,.35);
+    color:#39ff14;
+    border-radius:5px;
+    padding:5px 8px;
+    font-family:'Orbitron',sans-serif;
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.product{
+    font-family:'Orbitron',sans-serif;
+    font-size:15px;
+    margin-bottom:9px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    padding:7px 0;
+    border-top:1px solid rgba(255,255,255,.045);
+    color:#718171;
+    font-size:14px;
+}
+
+.row strong{color:#cce8cc;font-weight:600}
+
+.delivery{
+    margin-top:12px;
+    padding:12px;
+    border:1px solid rgba(57,255,20,.12);
+    border-radius:7px;
+    background:rgba(57,255,20,.025);
+}
+
+.delivery-title{
+    color:#39ff14;
+    font-family:'Orbitron',sans-serif;
+    font-size:10px;
+    letter-spacing:1px;
+    margin-bottom:5px;
+}
+
+.delivery-message{
+    color:#b9d9b9;
+    white-space:pre-wrap;
+    font-size:14px;
+    line-height:1.45;
+}
+
+.empty{
+    text-align:center;
+    padding:45px 20px;
+    color:#718171;
+}
+
+.error{
+    color:#ff7777;
+    line-height:1.5;
+}
+
+footer{
+    text-align:center;
+    color:#4f604f;
+    font-size:12px;
+    letter-spacing:1px;
+    padding:25px;
+}
+
+@media(max-width:600px){
+    nav{padding:0 4%}
+    .logo{font-size:19px}
+    .nav-btn{padding:8px 10px;font-size:9px}
+    .container{width:90%;margin-top:32px}
+    .heading h1{font-size:27px}
+    .order-top{align-items:flex-start}
+    .row{font-size:13px}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">NEXVORA</div>
+    <div class="nav-right">
+        <a class="nav-btn" href="dashboard.html">DASHBOARD</a>
+        <a class="nav-btn" href="store.html">STORE</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <section class="heading">
+        <small>ACCOUNT ACTIVITY</small>
+        <h1>ORDER HISTORY</h1>
+        <p>View your purchases and delivery status.</p>
+    </section>
+
+    <section class="panel">
+        <div class="status" id="status">Loading orders...</div>
+        <div id="orders"></div>
+    </section>
+
+</main>
+
+<footer>
+    NEXVORA © 2026 — ENTER THE DIGITAL NETWORK
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://lkspavoccfcwgufmczzq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const statusEl=document.getElementById('status');
+const ordersEl=document.getElementById('orders');
+
+function esc(value){
+    return String(value ?? '').replace(/[&<>"']/g,ch=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[ch]));
+}
+
+function money(value){
+    return '₹'+Number(value||0).toLocaleString('en-IN',{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
+}
+
+function formatDate(value){
+    if(!value) return '—';
+    const d=new Date(value);
+    if(Number.isNaN(d.getTime())) return value;
+    return d.toLocaleString('en-IN',{
+        dateStyle:'medium',
+        timeStyle:'short'
+    });
+}
+
+async function loadOrders(){
+    const {data:{session}}=await db.auth.getSession();
+
+    if(!session){
+        window.location.href='index.html';
+        return;
+    }
+
+    const {data:orders,error}=await db
+        .from('orders')
+        .select('id,product_id,product_name,amount,status,customer_note,created_at')
+        .eq('user_id',session.user.id)
+        .order('created_at',{ascending:false});
+
+    if(error){
+        console.error(error);
+        statusEl.textContent='';
+        ordersEl.innerHTML='<div class="error">Unable to load orders: '+esc(error.message)+'</div>';
+        return;
+    }
+
+    if(!orders || !orders.length){
+        statusEl.textContent='0 orders found.';
+        ordersEl.innerHTML='<div class="empty">No orders yet.</div>';
+        return;
+    }
+
+    statusEl.textContent=orders.length+' order'+(orders.length===1?'':'s')+' found.';
+
+    ordersEl.innerHTML=orders.map(o=>{
+        const status=String(o.status||'pending').toUpperCase();
+
+        return `
+        <article class="order">
+            <div class="order-top">
+                <div class="order-id">ORDER #${esc(o.id)}</div>
+                <div class="badge">${esc(status)}</div>
+            </div>
+
+            <div class="product">${esc(o.product_name||'NEXVORA PRODUCT')}</div>
+
+            <div class="row">
+                <span>AMOUNT</span>
+                <strong>${money(o.amount)}</strong>
+            </div>
+
+            <div class="row">
+                <span>ORDER DATE</span>
+                <strong>${esc(formatDate(o.created_at))}</strong>
+            </div>
+
+            ${o.customer_note ? `
+            <div class="row">
+                <span>CUSTOMER NOTE</span>
+                <strong>${esc(o.customer_note)}</strong>
+            </div>` : ''}
+
+            <div class="delivery" id="delivery-${esc(o.id)}">
+                <div class="delivery-title">DELIVERY</div>
+                <div class="delivery-message">Loading delivery status...</div>
+            </div>
+        </article>`;
+    }).join('');
+
+    for(const o of orders){
+        const box=document.getElementById('delivery-'+o.id);
+        if(!box) continue;
+
+        const {data:d,error:deliveryError}=await db
+            .from('order_deliveries')
+            .select('status,title,message,delivered_at')
+            .eq('order_id',o.id)
+            .maybeSingle();
+
+        if(deliveryError){
+            box.querySelector('.delivery-message').textContent='Delivery information unavailable.';
+            continue;
+        }
+
+        if(!d){
+            box.querySelector('.delivery-message').textContent='Delivery pending.';
+            continue;
+        }
+
+        const parts=[];
+        if(d.status) parts.push(String(d.status).toUpperCase());
+        if(d.title) parts.push(d.title);
+        if(d.message) parts.push(d.message);
+        if(d.delivered_at) parts.push('Delivered: '+formatDate(d.delivered_at));
+
+        box.querySelector('.delivery-message').textContent=parts.join(' — ')||'Delivery pending.';
+    }
+}
+
+loadOrders();
+
+db.auth.onAuthStateChange((event,session)=>{
+    if(session) loadOrders();
+});
+</script>
+
+</body>
+</html>
