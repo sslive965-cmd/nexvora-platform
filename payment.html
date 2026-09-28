@@ -473,7 +473,8 @@ async function loadProductPayment() {
 
         if (error) {
             console.error("Product load error:", error);
-            setStatus("Unable to load product price. Please refresh and try again.", true);
+            const safeMsg = error.message || error.code || "Unknown Supabase error";
+            setStatus("Supabase error: " + safeMsg, true);
             amountInput.value = "";
             upiAppBtn.disabled = true;
             return;
