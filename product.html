@@ -860,10 +860,63 @@ async function loadProduct(){
     location.href='payment.html?product_id='+encodeURIComponent(p.id)+'&mode=product';
   };
 
-  $('buyBalance').onclick=e=>{
-    e.preventDefault();
-    alert('Secure balance purchase is not connected yet. This button will only be enabled after the database-side purchase flow is implemented.');
-  };
+$('buyBalance').onclick=async e=>{
+  e.preventDefault();
+
+  const button=$('buyBalance');
+
+  const {data:{user}}=await db.auth.getUser();
+
+  if(!user){
+    alert('Please login first to buy using balance.');
+    return;
+  }
+
+  if(!validPrice){
+    alert('This product has no valid purchase price.');
+    return;
+  }
+
+  const confirmBuy=confirm(
+    'Buy '+name+' for '+money(p.price)+' using your NEXVORA balance?'
+  );
+
+  if(!confirmBuy) return;
+
+  button.textContent='PROCESSING...';
+  button.style.pointerEvents='none';
+
+  const {data:orderId,error}=await db.rpc(
+    'buy_product_with_balance',
+    {
+      p_product_id:p.id,
+      p_customer_note:null
+    }
+  );
+
+  if(error){
+    console.error(error);
+
+    button.textContent='BUY USING BALANCE';
+
+    button.style.pointerEvents='auto';
+
+    if(error.message.includes('Insufficient balance')){
+      alert('Insufficient balance.');
+    }else{
+      alert('Purchase failed: '+error.message);
+    }
+
+    return;
+  }
+
+  alert(
+    'Purchase successful!\\n\\nOrder ID: '+orderId+
+    '\\nAmount: '+money(p.price)
+  );
+
+  button.textContent='PURCHASED ✓';
+};
 
   $('addToCart').onclick=e=>{
     e.preventDefault();
