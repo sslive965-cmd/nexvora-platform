@@ -517,7 +517,8 @@ async function loadProductPayment() {
         setStatus("Amount loaded directly from the selected product.");
     } catch (err) {
         console.error("Product payment error:", err);
-        setStatus("Unable to load product price. Please refresh and try again.", true);
+        const safeMsg = err && (err.message || err.name) ? (err.message || err.name) : "Unknown runtime/network error";
+        setStatus("Load error: " + safeMsg, true);
         amountInput.value = "";
         upiAppBtn.disabled = true;
     }
