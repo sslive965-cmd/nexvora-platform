@@ -457,44 +457,69 @@ async function loadProductPayment() {
 
     setStatus("Loading product price...");
 
-    const { data, error } = await supabaseClient
-        .from("products")
-        .select("id,name,price,is_active")
-        .eq("id", productId)
-        .maybeSingle();
+    try {
+        const result = await Promise.race([
+            supabaseClient
+                .from("products")
+                .select("id,name,price,is_active")
+                .eq("id", productId)
+                .maybeSingle(),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Request timed out")), 10000)
+            )
+        ]);
 
-    if (error || !data) {
-        setStatus("Product could not be loaded.", true);
+        const { data, error } = result;
+
+        if (error) {
+            console.error("Product load error:", error);
+            setStatus("Unable to load product price. Please refresh and try again.", true);
+            amountInput.value = "";
+            upiAppBtn.disabled = true;
+            return;
+        }
+
+        if (!data) {
+            setStatus("Product not found.", true);
+            amountInput.value = "";
+            upiAppBtn.disabled = true;
+            return;
+        }
+
+        if (data.is_active === false) {
+            setStatus("This product is currently unavailable.", true);
+            amountInput.value = "";
+            upiAppBtn.disabled = true;
+            return;
+        }
+
+        const price = Number(data.price);
+        if (!Number.isFinite(price) || price <= 0) {
+            setStatus("Invalid product price.", true);
+            amountInput.value = "";
+            upiAppBtn.disabled = true;
+            return;
+        }
+
+        productPrice = price;
+
+        pageTitle.textContent = "PRODUCT PAYMENT";
+        pageSubtitle.textContent = "Pay the exact price of the selected product.";
+        productInfo.style.display = "block";
+        productName.textContent = data.name || "NEXVORA Product";
+
+        displayAmount.textContent = formatINR(productPrice);
+        amountInput.value = productPrice.toFixed(2);
+        amountInput.readOnly = true;
+
+        upiAppBtn.disabled = false;
+        setStatus("Amount loaded directly from the selected product.");
+    } catch (err) {
+        console.error("Product payment error:", err);
+        setStatus("Unable to load product price. Please refresh and try again.", true);
         amountInput.value = "";
-        return;
+        upiAppBtn.disabled = true;
     }
-
-    if (data.is_active === false) {
-        setStatus("This product is currently unavailable.", true);
-        amountInput.value = "";
-        return;
-    }
-
-    const price = Number(data.price);
-    if (!Number.isFinite(price) || price <= 0) {
-        setStatus("Invalid product price.", true);
-        amountInput.value = "";
-        return;
-    }
-
-    productPrice = price;
-
-    pageTitle.textContent = "PRODUCT PAYMENT";
-    pageSubtitle.textContent = "Pay the exact price of the selected product.";
-    productInfo.style.display = "block";
-    productName.textContent = data.name || "NEXVORA Product";
-
-    displayAmount.textContent = formatINR(productPrice);
-    amountInput.value = productPrice.toFixed(2);
-    amountInput.readOnly = true;
-
-    upiAppBtn.disabled = false;
-    setStatus("Amount loaded directly from the selected product.");
 }
 
 upiAppBtn.addEventListener("click", function () {
