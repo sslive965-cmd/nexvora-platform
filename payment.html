@@ -391,10 +391,10 @@ input:focus{
 
             <div class="file-box">
                 Upload your payment screenshot
-                <input type="file" accept="image/*">
+                <input type="file" id="screenshotFile" accept="image/*">
             </div>
 
-            <button class="verify" type="button">
+            <button class="verify" id="verifyBtn" type="button">
                 SUBMIT FOR VERIFICATION
             </button>
 
@@ -538,6 +538,109 @@ upiAppBtn.addEventListener("click", function () {
 
     window.location.href = upiUrl;
 });
+
+
+const verifyBtn = document.getElementById("verifyBtn");
+const utrInput = document.getElementById("utr");
+const screenshotFile = document.getElementById("screenshotFile");
+
+async function submitPaymentVerification() {
+    if (!productId || !productPrice) {
+        alert("Product payment details are not loaded yet. Please refresh the page.");
+        return;
+    }
+
+    const utr = utrInput.value.trim();
+    const file = screenshotFile.files && screenshotFile.files[0];
+
+    if (!utr) {
+        alert("Please enter the UTR / Transaction ID.");
+        utrInput.focus();
+        return;
+    }
+
+    if (!file) {
+        alert("Please upload your payment screenshot.");
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please upload an image file.");
+        return;
+    }
+
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = "SUBMITTING...";
+
+    try {
+        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        if (userError) throw userError;
+
+        const user = userData && userData.user;
+        if (!user) {
+            throw new Error("Please login before submitting payment verification.");
+        }
+
+        const { data: profile, error: profileError } = await supabaseClient
+            .from("users")
+            .select("username")
+            .eq("auth_user_id", user.id)
+            .maybeSingle();
+
+        if (profileError) throw profileError;
+
+        const username = profile?.username || user.user_metadata?.username || user.email?.split("@")[0] || "Customer";
+
+        const extension = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const safeExtension = extension || "jpg";
+        const filePath = user.id + "/" + Date.now() + "-payment." + safeExtension;
+
+        const { error: uploadError } = await supabaseClient
+            .storage
+            .from("payment-screenshots")
+            .upload(filePath, file, {
+                cacheControl: "3600",
+                upsert: false,
+                contentType: file.type
+            });
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicData } = supabaseClient
+            .storage
+            .from("payment-screenshots")
+            .getPublicUrl(filePath);
+
+        const screenshotUrl = publicData?.publicUrl;
+        if (!screenshotUrl) {
+            throw new Error("Screenshot URL could not be created.");
+        }
+
+        const { error: insertError } = await supabaseClient
+            .from("payment_submissions")
+            .insert({
+                username: username,
+                amount: Number(productPrice),
+                utr: utr,
+                status: "pending",
+                screenshot_url: screenshotUrl
+            });
+
+        if (insertError) throw insertError;
+
+        alert("Payment submitted successfully. It is now pending admin verification.");
+        utrInput.value = "";
+        screenshotFile.value = "";
+    } catch (error) {
+        console.error("PAYMENT SUBMISSION ERROR:", error);
+        alert("Submission failed: " + (error?.message || "Please try again."));
+    } finally {
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = "SUBMIT FOR VERIFICATION";
+    }
+}
+
+verifyBtn.addEventListener("click", submitPaymentVerification);
 
 loadProductPayment();
 </script>
