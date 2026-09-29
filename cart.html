@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXVORA — Cart</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#010302;color:#f4fff9;font-family:'Rajdhani',sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;z-index:-5;pointer-events:none;background:linear-gradient(rgba(0,255,100,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,100,.035) 1px,transparent 1px);background-size:55px 55px;transform:perspective(700px) rotateX(58deg) scale(1.8);transform-origin:center bottom}
+body:after{content:"";position:fixed;inset:0;z-index:-4;pointer-events:none;background:radial-gradient(circle at 50% 25%,rgba(0,255,100,.13),transparent 30%),linear-gradient(180deg,#000 0%,#020604 55%,#000 100%)}
+.navbar{height:78px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:rgba(0,3,2,.82);backdrop-filter:blur(18px);border-bottom:1px solid rgba(50,255,130,.22)}
+.logo{display:flex;align-items:center;gap:12px}.logo-mark{width:40px;height:40px;display:grid;place-items:center;color:#48ff8c;font-family:'Orbitron';font-size:27px;font-weight:900;border:1px solid #39ff88;clip-path:polygon(25% 0,100% 0,75% 100%,0 100%);text-shadow:0 0 15px #39ff88}.logo-name{font-family:'Orbitron';font-size:21px;font-weight:800;letter-spacing:3px}.logo-sub{font-size:8px;letter-spacing:4px;color:#46ff91}
+.nav-actions{display:flex;gap:10px}.nav-btn{padding:10px 16px;border:1px solid rgba(61,255,136,.35);color:#b9c8c0;text-decoration:none;font-family:'Orbitron';font-size:9px;letter-spacing:1px}.nav-btn:hover{color:#42ff8b;border-color:#42ff8b}
+.container{width:min(1200px,90%);margin:auto;padding:65px 0 100px}.system{color:#42ff8b;font-family:'Orbitron';font-size:10px;letter-spacing:2px}.system span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#42ff8b;box-shadow:0 0 15px #42ff8b;margin-right:8px}
+h1{margin-top:16px;font-family:'Orbitron';font-size:clamp(38px,5vw,68px)}h1 span{color:#42ff8b}.subtitle{margin-top:12px;color:#77877f;letter-spacing:2px}
+.cart-box{margin-top:40px;border:1px solid rgba(61,255,136,.22);background:rgba(0,3,2,.75);overflow:hidden}
+.cart-head,.cart-item{display:grid;grid-template-columns:minmax(300px,1fr) 120px 150px 110px;gap:20px;align-items:center}
+.cart-head{padding:15px 22px;color:#65766d;font-family:'Orbitron';font-size:9px;letter-spacing:1px;border-bottom:1px solid rgba(61,255,136,.15)}
+.cart-item{padding:18px 22px;border-bottom:1px solid rgba(61,255,136,.10)}
+.cart-product{display:flex;align-items:center;gap:16px;min-width:0}.thumb{width:110px;height:64px;object-fit:cover;border:1px solid rgba(61,255,136,.55);border-radius:8px;background:#010201}.mini-card{width:110px;height:64px;border:1px solid #42ff8b;border-radius:8px;padding:8px;background:linear-gradient(145deg,#08150d,#010201);font-family:'Orbitron';font-size:7px;color:#42ff8b}.mini-card .chip{width:22px;height:14px;margin-top:9px;border:1px solid #9dffbd;border-radius:3px;background:#315f42}.name{font-family:'Orbitron';font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.unit{color:#42ff8b;font-family:'Orbitron';font-size:14px}.qty{display:flex;align-items:center;gap:8px}.qty button,.remove{border:1px solid rgba(61,255,136,.35);background:transparent;color:#cfe8db;cursor:pointer;font-family:'Orbitron'}.qty button{width:28px;height:28px}.qty button:hover,.remove:hover{border-color:#42ff8b;color:#42ff8b}.qty span{min-width:25px;text-align:center;font-family:'Orbitron'}.remove{padding:9px 10px;font-size:8px;letter-spacing:.5px}
+.cart-footer{display:flex;justify-content:flex-end;align-items:center;gap:28px;padding:22px}.total-label{color:#7d8e85;font-family:'Orbitron';font-size:10px}.total{color:#42ff8b;font-family:'Orbitron';font-size:25px;font-weight:700}.empty{padding:65px 20px;text-align:center}.empty h2{font-family:'Orbitron';font-size:18px;color:#42ff8b}.empty p{margin-top:10px;color:#77877f}.continue{display:inline-block;margin-top:22px;padding:12px 18px;border:1px solid #42ff8b;color:#42ff8b;text-decoration:none;font-family:'Orbitron';font-size:9px;letter-spacing:1px}
+@media(max-width:800px){.cart-head{display:none}.cart-item{grid-template-columns:1fr;gap:12px}.cart-footer{justify-content:space-between}.nav-btn{display:none}.container{width:92%;padding-top:45px}}
+</style>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo"><div class="logo-mark">N</div><div><div class="logo-name">NEXVORA</div><div class="logo-sub">CART</div></div></div>
+  <div class="nav-actions"><a href="store.html" class="nav-btn">← STORE</a><a href="dashboard.html" class="nav-btn">DASHBOARD</a></div>
+</header>
+
+<main class="container">
+  <div class="system"><span></span>NEXVORA CART</div>
+  <h1>YOUR <span>CART</span></h1>
+  <p class="subtitle">REVIEW YOUR SELECTED PRODUCTS</p>
+
+  <section class="cart-box" id="cartBox"></section>
+</main>
+
+<script>
+'use strict';
+
+const cartBox=document.getElementById('cartBox');
+
+function money(v){
+  return Number(v||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function escapeHtml(v){
+  return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function readCart(){
+  try{
+    const c=JSON.parse(localStorage.getItem('nexvora_cart')||'[]');
+    return Array.isArray(c)?c:[];
+  }catch{return []}
+}
+function saveCart(c){localStorage.setItem('nexvora_cart',JSON.stringify(c));}
+
+function render(){
+  const cart=readCart();
+
+  if(!cart.length){
+    cartBox.innerHTML=`<div class="empty">
+      <h2>CART IS EMPTY</h2>
+      <p>No products have been added yet.</p>
+      <a class="continue" href="store.html">CONTINUE SHOPPING</a>
+    </div>`;
+    return;
+  }
+
+  let total=0;
+  const rows=cart.map((item,index)=>{
+    const qty=Math.max(1,Number(item.quantity)||1);
+    const price=Number(item.price)||0;
+    total+=price*qty;
+    const media=item.image_url
+      ? `<img class="thumb" src="${escapeHtml(item.image_url)}" alt="Product">`
+      : `<div class="mini-card">NEXVORA<div class="chip"></div>PRODUCT</div>`;
+
+    return `<div class="cart-item">
+      <div class="cart-product">${media}<div class="name">${escapeHtml(item.name||'PRODUCT')}</div></div>
+      <div class="unit">₹${money(price)}</div>
+      <div class="qty">
+        <button onclick="changeQty(${index},-1)">−</button>
+        <span>${qty}</span>
+        <button onclick="changeQty(${index},1)">+</button>
+      </div>
+      <button class="remove" onclick="removeItem(${index})">REMOVE</button>
+    </div>`;
+  }).join('');
+
+  cartBox.innerHTML=`<div class="cart-head"><div>PRODUCT</div><div>PRICE</div><div>QUANTITY</div><div>ACTION</div></div>
+    ${rows}
+    <div class="cart-footer"><div><div class="total-label">CART TOTAL</div><div class="total">₹${money(total)}</div></div></div>`;
+}
+
+function changeQty(index,delta){
+  const cart=readCart();
+  if(!cart[index]) return;
+  cart[index].quantity=Math.max(1,(Number(cart[index].quantity)||1)+delta);
+  saveCart(cart);
+  render();
+}
+
+function removeItem(index){
+  const cart=readCart();
+  cart.splice(index,1);
+  saveCart(cart);
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
