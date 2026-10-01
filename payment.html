@@ -628,7 +628,37 @@ async function submitPaymentVerification() {
 
         if (insertError) throw insertError;
 
-        alert("Payment submitted successfully. It is now pending admin verification.");
+        // Create a pending product order so the admin can verify and deliver it.
+        // This does not alter the existing payment approval/credit flow.
+        const { data: productData, error: productLookupError } = await supabaseClient
+            .from("products")
+            .select("id,name")
+            .eq("id", productId)
+            .maybeSingle();
+
+        if (productLookupError) throw productLookupError;
+
+        const { error: orderError } = await supabaseClient
+            .from("orders")
+            .insert({
+                user_id: user.id,
+                product_id: Number(productId),
+                product_name: productData?.name || "NEXVORA Product",
+                amount: Number(productPrice),
+                status: "pending",
+                customer_note: "Payment submitted for verification.",
+                custom_fields: {
+                    payment_utr: utr,
+                    payment_status: "pending"
+                }
+            });
+
+        if (orderError) {
+            console.error("ORDER CREATION ERROR:", orderError);
+            throw new Error("Payment submitted, but order creation failed: " + (orderError.message || "Unknown error"));
+        }
+
+        alert("Payment submitted successfully. Your order is now pending admin verification.");
         utrInput.value = "";
         screenshotFile.value = "";
     } catch (error) {
