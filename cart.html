@@ -20,8 +20,8 @@ h1{margin-top:16px;font-family:'Orbitron';font-size:clamp(38px,5vw,68px)}h1 span
 .cart-head{padding:15px 22px;color:#65766d;font-family:'Orbitron';font-size:9px;letter-spacing:1px;border-bottom:1px solid rgba(61,255,136,.15)}
 .cart-item{padding:18px 22px;border-bottom:1px solid rgba(61,255,136,.10)}
 .cart-product{display:flex;align-items:center;gap:16px;min-width:0}.thumb{width:110px;height:64px;object-fit:cover;border:1px solid rgba(61,255,136,.55);border-radius:8px;background:#010201}.mini-card{width:110px;height:64px;border:1px solid #42ff8b;border-radius:8px;padding:8px;background:linear-gradient(145deg,#08150d,#010201);font-family:'Orbitron';font-size:7px;color:#42ff8b}.mini-card .chip{width:22px;height:14px;margin-top:9px;border:1px solid #9dffbd;border-radius:3px;background:#315f42}.name{font-family:'Orbitron';font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.unit{color:#42ff8b;font-family:'Orbitron';font-size:14px}.qty{display:flex;align-items:center;gap:8px}.qty button,.remove{border:1px solid rgba(61,255,136,.35);background:transparent;color:#cfe8db;cursor:pointer;font-family:'Orbitron'}.qty button{width:28px;height:28px}.qty button:hover,.remove:hover{border-color:#42ff8b;color:#42ff8b}.qty span{min-width:25px;text-align:center;font-family:'Orbitron'}.remove{padding:9px 10px;font-size:8px;letter-spacing:.5px}
-.cart-footer{display:flex;justify-content:flex-end;align-items:center;gap:28px;padding:22px}.total-label{color:#7d8e85;font-family:'Orbitron';font-size:10px}.total{color:#42ff8b;font-family:'Orbitron';font-size:25px;font-weight:700}.empty{padding:65px 20px;text-align:center}.empty h2{font-family:'Orbitron';font-size:18px;color:#42ff8b}.empty p{margin-top:10px;color:#77877f}.continue{display:inline-block;margin-top:22px;padding:12px 18px;border:1px solid #42ff8b;color:#42ff8b;text-decoration:none;font-family:'Orbitron';font-size:9px;letter-spacing:1px}
-@media(max-width:800px){.cart-head{display:none}.cart-item{grid-template-columns:1fr;gap:12px}.cart-footer{justify-content:space-between}.nav-btn{display:none}.container{width:92%;padding-top:45px}}
+.cart-footer{display:flex;justify-content:flex-end;align-items:center;gap:28px;padding:22px;flex-wrap:wrap}.checkout-btn{display:inline-block;padding:13px 20px;border:1px solid #42ff8b;background:#42ff8b;color:#010302;text-decoration:none;font-family:'Orbitron';font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer}.checkout-btn:hover{box-shadow:0 0 22px rgba(66,255,139,.35)}.checkout-note{width:100%;text-align:right;color:#65766d;font-size:11px}.total-label{color:#7d8e85;font-family:'Orbitron';font-size:10px}.total{color:#42ff8b;font-family:'Orbitron';font-size:25px;font-weight:700}.empty{padding:65px 20px;text-align:center}.empty h2{font-family:'Orbitron';font-size:18px;color:#42ff8b}.empty p{margin-top:10px;color:#77877f}.continue{display:inline-block;margin-top:22px;padding:12px 18px;border:1px solid #42ff8b;color:#42ff8b;text-decoration:none;font-family:'Orbitron';font-size:9px;letter-spacing:1px}
+@media(max-width:800px){.cart-head{display:none}.cart-item{grid-template-columns:1fr;gap:12px}.cart-footer{justify-content:space-between}.checkout-note{text-align:left}.nav-btn{display:none}.container{width:92%;padding-top:45px}}
 </style>
 </head>
 <body>
@@ -92,7 +92,14 @@ function render(){
 
   cartBox.innerHTML=`<div class="cart-head"><div>PRODUCT</div><div>PRICE</div><div>QUANTITY</div><div>ACTION</div></div>
     ${rows}
-    <div class="cart-footer"><div><div class="total-label">CART TOTAL</div><div class="total">₹${money(total)}</div></div></div>`;
+    <div class="cart-footer">
+      <div>
+        <div class="total-label">CART TOTAL</div>
+        <div class="total">₹${money(total)}</div>
+      </div>
+      <button class="checkout-btn" type="button" onclick="checkout()">CHECKOUT</button>
+      <div class="checkout-note">Checkout will use the existing NEXVORA payment flow.</div>
+    </div>`;
 }
 
 function changeQty(index,delta){
@@ -108,6 +115,36 @@ function removeItem(index){
   cart.splice(index,1);
   saveCart(cart);
   render();
+}
+
+function checkout(){
+  const cart=readCart();
+  if(!cart.length){
+    alert('CART IS EMPTY');
+    return;
+  }
+
+  /*
+   * The existing payment page expects a single product_id.
+   * To avoid changing/breaking the existing payment system, checkout
+   * only starts when the cart contains exactly one unique product.
+   */
+  const uniqueIds=[...new Set(cart.map(item=>String(item.id)))];
+
+  if(uniqueIds.length!==1){
+    alert('Please checkout one product at a time. Remove other products from the cart, then try again.');
+    return;
+  }
+
+  const productId=encodeURIComponent(uniqueIds[0]);
+  const qty=Math.max(1,Number(cart[0].quantity)||1);
+
+  /*
+   * Keep quantity available for the payment page without changing
+   * the existing payment URL structure.
+   */
+  sessionStorage.setItem('nexvora_checkout_quantity',String(qty));
+  window.location.href=`payment.html?product_id=${productId}&mode=product`;
 }
 
 render();
