@@ -316,8 +316,8 @@ footer{
     <div class="logo">NEXVORA</div>
 
     <div class="nav-right">
-        <a id="adminBtn" class="nav-btn" style="display:none;" href="admin (6).html">ADMIN PANEL</a>
-        <a class="nav-btn" href="store (6).html">STORE</a>
+        <a id="adminBtn" class="nav-btn" style="display:none;" href="admin.html">ADMIN PANEL</a>
+        <a class="nav-btn" href="store.html">STORE</a>
         <a class="nav-btn" href="index.html">HOME</a>
     </div>
 </nav>
@@ -333,7 +333,7 @@ footer{
     <section class="balance">
         <div class="balance-label">AVAILABLE BALANCE</div>
         <div class="balance-amount">₹0</div>
-        <a href="payment (5).html" class="add-btn">+ ADD BALANCE</a>
+        <a href="payment.html" class="add-btn">+ ADD BALANCE</a>
     </section>
 
     <section class="dashboard-grid">
@@ -342,7 +342,7 @@ footer{
             <div class="icon">📦</div>
             <h3>ORDER HISTORY</h3>
             <p>View your previous purchases and delivery status.</p>
-            <a href="dashboard-corrected.html#profile">OPEN ORDERS →</a>
+            <a href="dashboard.html#profile">OPEN ORDERS →</a>
         </div>
 
         <div class="card">
@@ -356,7 +356,7 @@ footer{
             <div class="icon">💳</div>
             <h3>ADD BALANCE</h3>
             <p>Add INR balance through the payment verification system.</p>
-            <a href="payment (5).html">ADD BALANCE →</a>
+            <a href="payment.html">ADD BALANCE →</a>
         </div>
 
         <div class="card">
@@ -377,7 +377,7 @@ footer{
             <div class="icon">🛒</div>
             <h3>STORE</h3>
             <p>Browse available digital products and access.</p>
-            <a href="store (6).html">OPEN STORE →</a>
+            <a href="store.html">OPEN STORE →</a>
         </div>
 
     </section>
@@ -412,7 +412,7 @@ footer{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://lkspavoccfcwgufmczzq.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 async function loadDashboard(){
  const {data:{session}}=await db.auth.getSession();
