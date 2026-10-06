@@ -12,23 +12,108 @@
 <div class="wrap"><div class="brand">NEXVORA</div><div class="sub">SECURE PLATFORM ACCESS</div><div class="tabs"><button id="loginTab" class="tab active">LOGIN</button><button id="registerTab" class="tab">REGISTER</button></div>
 <form id="form"><div class="field"><label>EMAIL</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>PASSWORD</label><input id="password" type="password" minlength="6" autocomplete="current-password" required></div><button id="submitBtn" class="btn" type="submit">LOGIN</button></form>
 <button id="googleBtn" class="btn google" type="button">CONTINUE WITH GOOGLE</button><div id="msg" class="msg"></div><a class="back" href="index.html">← BACK TO NEXVORA PLATFORM</a></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const URL='https://lkspavoccfcwgufmczzq.supabase.co';
-const KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
-let db=null; let mode='login';
-function boot(){
- if(!window.supabase){msg.textContent='LOGIN SYSTEM LOADING...'; setTimeout(boot,500); return;}
- db=window.supabase.createClient(URL,KEY);
- checkSession();
+const SUPABASE_URL='https://lkspavoccfcwgufmczzq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
+let db=null, mode='login', supabaseReady=false;
+
+const msg=document.getElementById('msg');
+const submit=document.getElementById('submitBtn');
+const form=document.getElementById('form');
+const googleBtn=document.getElementById('googleBtn');
+
+function setMsg(text,color='#ff7777'){msg.style.color=color;msg.textContent=text;}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('loginTab').classList.toggle('active',m==='login');
+  document.getElementById('registerTab').classList.toggle('active',m==='register');
+  submit.textContent=m==='login'?'LOGIN':'CREATE ACCOUNT';
+  setMsg('');
 }
 
-const msg=document.getElementById('msg'),submit=document.getElementById('submitBtn');
-function setMode(m){mode=m;document.getElementById('loginTab').classList.toggle('active',m==='login');document.getElementById('registerTab').classList.toggle('active',m==='register');submit.textContent=m==='login'?'LOGIN':'CREATE ACCOUNT';msg.textContent='';}
-async function goHome(){window.location.href='home.html';}
-async function checkSession(){if(!db)return;const {data}=await db.auth.getSession();if(data.session)goHome();}
-document.getElementById('loginTab').onclick=()=>setMode('login');document.getElementById('registerTab').onclick=()=>setMode('register');
-document.getElementById('form').addEventListener('submit',async e=>{e.preventDefault();submit.disabled=true;msg.style.color='#7b8b82';msg.textContent='PROCESSING...';const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;try{let r;if(mode==='login'){r=await db.auth.signInWithPassword({email,password});}else{r=await db.auth.signUp({email,password,options:{data:{role:'customer'}}});}if(r.error)throw r.error;if(mode==='register'&&!r.data.session){msg.style.color='#42ff8b';msg.textContent='Account created. Check your email, then login.';setMode('login');return;}msg.style.color='#42ff8b';msg.textContent='ACCESS GRANTED';setTimeout(goHome,250);}catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Authentication failed.';}finally{submit.disabled=false;}});
-document.getElementById('googleBtn').onclick=async()=>{if(!db){msg.textContent='LOGIN SYSTEM NOT READY';return;}msg.style.color='#7b8b82';msg.textContent='OPENING GOOGLE LOGIN...';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/home.html'}});if(error){msg.style.color='#ff7777';msg.textContent=error.message;}};
-boot();
-</script></body></html>
+function goHome(){window.location.href='home.html';}
+
+function initSupabase(){
+  if(supabaseReady) return true;
+  if(!window.supabase || !window.supabase.createClient) return false;
+  try{
+    db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    supabaseReady=!!db;
+    return supabaseReady;
+  }catch(err){
+    setMsg(err.message||'Login system could not start.');
+    return false;
+  }
+}
+
+async function waitForSupabase(){
+  for(let i=0;i<30;i++){
+    if(initSupabase()){
+      setMsg('');
+      const {data,error}=await db.auth.getSession();
+      if(error) setMsg(error.message);
+      else if(data.session) goHome();
+      return;
+    }
+    if(i===0) setMsg('LOGIN SYSTEM LOADING...','#7b8b82');
+    await new Promise(r=>setTimeout(r,300));
+  }
+  setMsg('LOGIN SYSTEM FAILED TO LOAD. REFRESH THE PAGE.');
+}
+
+document.getElementById('loginTab').onclick=()=>setMode('login');
+document.getElementById('registerTab').onclick=()=>setMode('register');
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!initSupabase()){setMsg('LOGIN SYSTEM NOT READY. PLEASE WAIT A MOMENT.');return;}
+  submit.disabled=true;
+  setMsg('PROCESSING...','#7b8b82');
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  try{
+    let r;
+    if(mode==='login'){
+      r=await db.auth.signInWithPassword({email,password});
+    }else{
+      r=await db.auth.signUp({email,password,options:{data:{role:'customer'}}});
+    }
+    if(r.error) throw r.error;
+    if(mode==='register'&&!r.data.session){
+      setMsg('Account created. Check your email, then login.','#42ff8b');
+      setMode('login');
+      return;
+    }
+    setMsg('ACCESS GRANTED','#42ff8b');
+    setTimeout(goHome,250);
+  }catch(err){
+    setMsg(err.message||'Authentication failed.');
+  }finally{
+    submit.disabled=false;
+  }
+});
+
+googleBtn.onclick=async()=>{
+  if(!initSupabase()){setMsg('LOGIN SYSTEM NOT READY. PLEASE WAIT A MOMENT.');return;}
+  setMsg('OPENING GOOGLE LOGIN...','#7b8b82');
+  const {error}=await db.auth.signInWithOAuth({
+    provider:'google',
+    options:{redirectTo:window.location.origin+'/home.html'}
+  });
+  if(error) setMsg(error.message);
+};
+
+const cdn=document.createElement('script');
+cdn.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+cdn.onload=waitForSupabase;
+cdn.onerror=()=>{
+  setMsg('LOGIN SYSTEM CDN FAILED. RETRYING...','#ff7777');
+  const fallback=document.createElement('script');
+  fallback.src='https://unpkg.com/@supabase/supabase-js@2';
+  fallback.onload=waitForSupabase;
+  fallback.onerror=()=>setMsg('LOGIN SYSTEM FAILED TO LOAD. REFRESH THE PAGE.');
+  document.head.appendChild(fallback);
+};
+document.head.appendChild(cdn);
+   </script>
