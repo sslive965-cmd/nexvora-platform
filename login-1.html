@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXVORA — Login / Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#010302;color:#fff;font-family:Rajdhani,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:18px}.wrap{width:min(440px,100%);background:#030906;border:1px solid #42ff8b44;border-radius:10px;box-shadow:0 0 45px #42ff8b14;padding:25px}.brand{font-family:Orbitron;color:#42ff8b;font-weight:800;letter-spacing:3px;text-align:center;font-size:19px}.sub{text-align:center;color:#68766e;font-size:11px;letter-spacing:2px;margin:5px 0 22px}.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid #42ff8b35;margin-bottom:18px}.tab{padding:12px;background:none;color:#718077;border:0;font-family:Orbitron;font-size:10px;cursor:pointer}.tab.active{background:#42ff8b;color:#010302}.field{margin-bottom:13px}.field label{display:block;color:#7d8c82;font-size:11px;letter-spacing:1px;margin-bottom:6px}.field input{width:100%;padding:12px;background:#010302;border:1px solid #42ff8b35;border-radius:5px;color:#fff;outline:none}.field input:focus{border-color:#42ff8b}.btn{width:100%;padding:12px;border:1px solid #42ff8b66;border-radius:6px;background:#42ff8b;color:#010302;font-family:Orbitron;font-weight:700;font-size:10px;cursor:pointer}.google{margin-top:10px;background:#06120b;color:#42ff8b}.msg{min-height:20px;text-align:center;margin-top:12px;color:#ff7777;font-size:12px}.back{display:block;text-align:center;color:#718077;text-decoration:none;margin-top:16px;font-size:12px}.back:hover{color:#42ff8b}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="brand">NEXVORA</div><div class="sub">SECURE PLATFORM ACCESS</div><div class="tabs"><button id="loginTab" class="tab active">LOGIN</button><button id="registerTab" class="tab">REGISTER</button></div>
+<form id="form"><div class="field"><label>EMAIL</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>PASSWORD</label><input id="password" type="password" minlength="6" autocomplete="current-password" required></div><button id="submitBtn" class="btn" type="submit">LOGIN</button></form>
+<button id="googleBtn" class="btn google" type="button">CONTINUE WITH GOOGLE</button><div id="msg" class="msg"></div><a class="back" href="index.html">← BACK TO NEXVORA PLATFORM</a></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const URL='https://lkspavoccfcwgufmczzq.supabase.co';
+const KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
+const db=window.supabase.createClient(URL,KEY);
+let mode='login';
+const msg=document.getElementById('msg'),submit=document.getElementById('submitBtn');
+function setMode(m){mode=m;document.getElementById('loginTab').classList.toggle('active',m==='login');document.getElementById('registerTab').classList.toggle('active',m==='register');submit.textContent=m==='login'?'LOGIN':'CREATE ACCOUNT';msg.textContent='';}
+async function goHome(){window.location.href='home.html';}
+async function checkSession(){const {data}=await db.auth.getSession();if(data.session)goHome();}
+document.getElementById('loginTab').onclick=()=>setMode('login');document.getElementById('registerTab').onclick=()=>setMode('register');
+document.getElementById('form').onsubmit=async e=>{e.preventDefault();submit.disabled=true;msg.style.color='#7b8b82';msg.textContent='PROCESSING...';const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;try{let r;if(mode==='login'){r=await db.auth.signInWithPassword({email,password});}else{r=await db.auth.signUp({email,password,options:{data:{role:'customer'}}});}if(r.error)throw r.error;if(mode==='register'&&!r.data.session){msg.style.color='#42ff8b';msg.textContent='Account created. Check your email, then login.';setMode('login');return;}msg.style.color='#42ff8b';msg.textContent='ACCESS GRANTED';setTimeout(goHome,250);}catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Authentication failed.';}finally{submit.disabled=false;}};
+document.getElementById('googleBtn').onclick=async()=>{msg.style.color='#7b8b82';msg.textContent='OPENING GOOGLE LOGIN...';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/home.html'}});if(error){msg.style.color='#ff7777';msg.textContent=error.message;}};
+checkSession();
+</script></body></html>
