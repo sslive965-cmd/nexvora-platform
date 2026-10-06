@@ -16,14 +16,19 @@
 <script>
 const URL='https://lkspavoccfcwgufmczzq.supabase.co';
 const KEY='sb_publishable_dBEtIMGoM2y1Wy5NAYxHwQ_Ic3ga-EA';
-const db=window.supabase.createClient(URL,KEY);
-let mode='login';
+let db=null; let mode='login';
+function boot(){
+ if(!window.supabase){msg.textContent='LOGIN SYSTEM LOADING...'; setTimeout(boot,500); return;}
+ db=window.supabase.createClient(URL,KEY);
+ checkSession();
+}
+
 const msg=document.getElementById('msg'),submit=document.getElementById('submitBtn');
 function setMode(m){mode=m;document.getElementById('loginTab').classList.toggle('active',m==='login');document.getElementById('registerTab').classList.toggle('active',m==='register');submit.textContent=m==='login'?'LOGIN':'CREATE ACCOUNT';msg.textContent='';}
 async function goHome(){window.location.href='home.html';}
-async function checkSession(){const {data}=await db.auth.getSession();if(data.session)goHome();}
+async function checkSession(){if(!db)return;const {data}=await db.auth.getSession();if(data.session)goHome();}
 document.getElementById('loginTab').onclick=()=>setMode('login');document.getElementById('registerTab').onclick=()=>setMode('register');
-document.getElementById('form').onsubmit=async e=>{e.preventDefault();submit.disabled=true;msg.style.color='#7b8b82';msg.textContent='PROCESSING...';const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;try{let r;if(mode==='login'){r=await db.auth.signInWithPassword({email,password});}else{r=await db.auth.signUp({email,password,options:{data:{role:'customer'}}});}if(r.error)throw r.error;if(mode==='register'&&!r.data.session){msg.style.color='#42ff8b';msg.textContent='Account created. Check your email, then login.';setMode('login');return;}msg.style.color='#42ff8b';msg.textContent='ACCESS GRANTED';setTimeout(goHome,250);}catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Authentication failed.';}finally{submit.disabled=false;}};
-document.getElementById('googleBtn').onclick=async()=>{msg.style.color='#7b8b82';msg.textContent='OPENING GOOGLE LOGIN...';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/home.html'}});if(error){msg.style.color='#ff7777';msg.textContent=error.message;}};
-checkSession();
+document.getElementById('form').addEventListener('submit',async e=>{e.preventDefault();submit.disabled=true;msg.style.color='#7b8b82';msg.textContent='PROCESSING...';const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;try{let r;if(mode==='login'){r=await db.auth.signInWithPassword({email,password});}else{r=await db.auth.signUp({email,password,options:{data:{role:'customer'}}});}if(r.error)throw r.error;if(mode==='register'&&!r.data.session){msg.style.color='#42ff8b';msg.textContent='Account created. Check your email, then login.';setMode('login');return;}msg.style.color='#42ff8b';msg.textContent='ACCESS GRANTED';setTimeout(goHome,250);}catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Authentication failed.';}finally{submit.disabled=false;}});
+document.getElementById('googleBtn').onclick=async()=>{if(!db){msg.textContent='LOGIN SYSTEM NOT READY';return;}msg.style.color='#7b8b82';msg.textContent='OPENING GOOGLE LOGIN...';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/home.html'}});if(error){msg.style.color='#ff7777';msg.textContent=error.message;}};
+boot();
 </script></body></html>
