@@ -6,6 +6,7 @@
 <title>NEXVORA — Payment</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -321,12 +322,7 @@ input:focus{
 
 <nav>
     <div class="logo">NEXVORA</div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <a href="home.html" class="back">⌂ HOME</a>
-      <a href="store.html" class="back">▣ STORE</a>
-      <a href="dashboard.html" class="back">◉ DASHBOARD</a>
-      <a href="#" onclick="history.back();return false" class="back">← BACK</a>
-    </div>
+    <a href="dashboard.html" class="back">← DASHBOARD</a>
 </nav>
 
 <main class="container">
@@ -355,9 +351,7 @@ input:focus{
                 <strong>jinwoo40054@ptaxis</strong>
             </div>
 
-            <div class="qr">
-    <img src="payment-qr.jpg" alt="NEXVORA Payment QR">
-            </div>
+            <div class="qr"><div id="qrCode"></div></div>
 
             <div class="qr-note">
                 Scan the official QR using your UPI app and complete the payment.
@@ -440,6 +434,19 @@ let productPrice = null;
 let checkoutItems = [];
 let checkoutTotal = null;
 let paymentMode = "balance";
+const UPI_ID = "jinwoo40054@ptaxis";
+const UPI_NAME = "NEXVORA";
+function renderUpiQr(amount){
+    const box=document.getElementById("qrCode");
+    if(!box)return;
+    box.innerHTML="";
+    const n=Number(amount);
+    if(!Number.isFinite(n)||n<=0){upiAppBtn.disabled=true;return;}
+    const upiUrl="upi://pay?pa="+encodeURIComponent(UPI_ID)+"&pn="+encodeURIComponent(UPI_NAME)+"&am="+encodeURIComponent(n.toFixed(2))+"&cu=INR";
+    if(window.QRCode){new QRCode(box,{text:upiUrl,width:210,height:210,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});}
+    upiAppBtn.disabled=false;
+    upiAppBtn.dataset.amount=n.toFixed(2);
+}
 
 function setStatus(message, isError = false) {
     productStatus.textContent = message;
@@ -536,7 +543,7 @@ async function loadCartPayment() {
     displayAmount.textContent = formatINR(total);
     amountInput.value = total.toFixed(2);
     amountInput.readOnly = true;
-    upiAppBtn.disabled = false;
+    renderUpiQr(total);
     setStatus(checkoutItems.length + " product" + (checkoutItems.length === 1 ? "" : "s") + " in this payment.");
     return true;
 }
@@ -563,8 +570,10 @@ async function loadProductPayment() {
         amountInput.placeholder = "Enter amount";
         amountInput.value = "";
         displayAmount.textContent = "₹0.00";
-        upiAppBtn.style.display = "none";
-        setStatus("Enter the exact amount you paid. After admin approval, only this amount will be credited to your balance.");
+        upiAppBtn.style.display = "block";
+        upiAppBtn.disabled = true;
+        renderUpiQr(0);
+        setStatus("Enter the amount first. QR and UPI App payment will use that exact amount.");
         return;
     }
 
@@ -631,8 +640,8 @@ async function loadProductPayment() {
         displayAmount.textContent = formatINR(productPrice);
         amountInput.value = productPrice.toFixed(2);
         amountInput.readOnly = true;
-        upiAppBtn.disabled = false;
-        setStatus("Amount loaded directly from the selected product.");
+        renderUpiQr(productPrice);
+        setStatus("Fixed product price loaded. QR and UPI App use this exact amount.");
     } catch (err) {
         console.error("Product payment error:", err);
         setStatus("Load error: " + (err.message || "Unknown runtime/network error"), true);
@@ -641,12 +650,22 @@ async function loadProductPayment() {
     }
 }
 
-upiAppBtn.addEventListener("click", function () {
-    if (!productPrice) return;
+amountInput.addEventListener("input",function(){
+    if(paymentMode!=="balance")return;
+    const n=Number(amountInput.value);
+    displayAmount.textContent=Number.isFinite(n)&&n>0?formatINR(n):"₹0.00";
+    productPrice=Number.isFinite(n)&&n>0?n:null;
+    renderUpiQr(productPrice||0);
+});
 
-    const pa = "jinwoo40054@ptaxis";
-    const pn = "NEXVORA";
-    const am = Number(productPrice).toFixed(2);
+upiAppBtn.addEventListener("click", function () {
+    const payAmount = paymentMode === "balance" ? Number(amountInput.value) : Number(productPrice);
+    if (!Number.isFinite(payAmount) || payAmount <= 0) return;
+
+    const pa = UPI_ID;
+    const pn = UPI_NAME;
+    const am = payAmount.toFixed(2);
+    if (!Number.isFinite(Number(productPrice)) || Number(productPrice) <= 0) return;
     const upiUrl =
         "upi://pay?pa=" + encodeURIComponent(pa) +
         "&pn=" + encodeURIComponent(pn) +
