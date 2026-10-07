@@ -672,8 +672,27 @@ upiAppBtn.addEventListener("click", function () {
         "&am=" + encodeURIComponent(am) +
         "&cu=INR";
 
-    window.location.href = upiUrl;
+    // Open the UPI deep-link through a real anchor so Android can hand it to an installed UPI app.
+    const link = document.createElement("a");
+    link.href = upiUrl;
+    link.target = "_self";
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => link.remove(), 1500);
 });
+
+const topupParams = new URLSearchParams(location.search);
+const gameUid = topupParams.get("game_uid") || "";
+const gameRegion = topupParams.get("region") || "";
+const gameName = topupParams.get("game") || "";
+function show24HourWaiting(){
+  const box=document.createElement("div"); box.id="waiting24"; box.style.cssText="margin:22px auto;padding:28px;max-width:650px;text-align:center;border:1px solid #42ff8b55;background:#031008;box-shadow:0 0 28px #42ff8b12";
+  box.innerHTML='<div style="font:700 24px Orbitron;color:#42ff8b;letter-spacing:2px">PAYMENT UNDER VERIFICATION</div><div style="margin-top:14px;color:#d8e7de;font:13px Arial;line-height:1.7">Your payment proof has been submitted successfully.<br><b style="color:#42ff8b">24 HOURS WAITING</b><br>Your order will be processed after payment verification.</div><div style="margin-top:18px;color:#82948a;font:10px Orbitron;letter-spacing:1px">PLEASE DO NOT SUBMIT THE SAME PAYMENT AGAIN</div>';
+  document.body.appendChild(box);
+  const f=verifyBtn.closest("form"); if(f) f.style.display="none";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
 
 const verifyBtn = document.getElementById("verifyBtn");
 const utrInput = document.getElementById("utr");
@@ -779,7 +798,11 @@ async function submitPaymentVerification() {
                     payment_status: "pending",
                     quantity: Number(item.quantity),
                     unit_price: Number(item.price),
-                    cart_payment: checkoutItems.length > 1
+                    cart_payment: checkoutItems.length > 1,
+                    topup_game: gameName || undefined,
+                    topup_game_uid: gameUid || undefined,
+                    topup_region: gameRegion || undefined,
+                    waiting_hours: (gameName || gameUid || gameRegion) ? 24 : undefined
                 }
             }));
 
@@ -792,7 +815,7 @@ async function submitPaymentVerification() {
                 throw new Error("Payment submitted, but order creation failed: " + (orderError.message || "Unknown error"));
             }
 
-            alert("Payment submitted successfully. Your order(s) are now pending admin verification. Balance will not be credited for product purchases.");
+            if(gameName || gameUid || gameRegion){ show24HourWaiting(); } else { alert("Payment submitted successfully. Your order(s) are now pending admin verification. Balance will not be credited for product purchases."); }
             clearCheckoutState();
         } else {
             alert("Payment submitted successfully. After admin approval, ₹" + Number(productPrice).toFixed(2) + " will be credited to your balance.");
