@@ -294,6 +294,16 @@ body::after{
   box-shadow:0 0 28px rgba(61,255,136,.3);
 }
 
+.balance-buy{
+  background:#06150a;
+  color:#42ff8b;
+  border:1px solid #42ff8b;
+}
+
+.balance-buy:hover{
+  box-shadow:0 0 28px rgba(61,255,136,.3);
+}
+
 @media(max-width:800px){
   .product-layout{
     grid-template-columns:1fr;
@@ -356,7 +366,6 @@ body::after{
     </div>
   </div>
 
-  <a href="home.html" class="back">⌂ HOME</a>
   <a href="store.html" class="back">← BACK TO STORE</a>
 
 </header>
@@ -396,32 +405,27 @@ body::after{
 
     <div class="info">
 
-      <h1>
-        VISA<br>
-        <span>DIGITAL ACCESS</span>
+      <h1 id="productTitle">
+        CARD<br>
+        <span>DETAILS</span>
       </h1>
 
-      <p class="description">
-        Premium digital access product with secure delivery
-        through the NEXVORA platform.
+      <p class="description" id="productDescription">
+        Loading product information...
       </p>
 
-      <div class="price">₹3,999</div>
+      <div class="price" id="productPrice">₹0</div>
 
-      <div class="status">
-        ● AVAILABLE
+      <div class="status" id="productStatus">
+        ● LOADING
       </div>
 
-      <div class="features">
-        <div>Digital product delivery</div>
-        <div>Order tracking through dashboard</div>
-        <div>Secure customer account</div>
-        <div>Support available through Telegram</div>
-      </div>
+      <div class="features" id="productFeatures"></div>
 
       <div class="actions">
-        <a href="#" class="btn cart">ADD TO CART</a>
-        <a href="payment.html" class="btn buy">BUY NOW →</a>
+        <a href="#" class="btn cart" id="addToCart">ADD TO CART</a>
+        <a href="#" class="btn buy" id="buyNow">BUY NOW →</a>
+        <a href="#" class="btn balance-buy" id="buyBalance">BUY USING BALANCE</a>
       </div>
 
     </div>
@@ -429,6 +433,6 @@ body::after{
   </section>
 
 </main>
-
+\n<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>\n<script>\n'use strict';\nconst SUPABASE_URL='https://lkspavoccfcwgufmczzq.supabase.co';\nconst SUPABASE_PUBLISHABLE_KEY='sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T';\nconst db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);\nconst params=new URLSearchParams(location.search);\nconst productId=params.get('id')||params.get('product_id');\nconst $=id=>document.getElementById(id);\nconst esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');\nconst money=v=>v===null||v===''||v===undefined||Number.isNaN(Number(v))?'—':'₹'+Number(v).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});\nfunction fieldLabel(k){return String(k).replace(/_/g,' ').replace(/\\b\\w/g,m=>m.toUpperCase());}\nfunction renderCardFields(c,p){\n  const rows=[\n    ['Card Balance',c.card_balance],['Limit',c.limit],['Expiry',c.expiry],['Delivery',c.delivery],['Card Type',c.card_type],['Card Holder',c.card_holder],['Card Network',c.card_network],['Card Number',c.card_number],['Quantity',c.quantity]\n  ];\n  const html=rows.filter(([,v])=>v!==undefined&&v!==null&&String(v)!=='').map(([k,v])=>`<div>${esc(k)}: ${esc(v)}</div>`).join('');\n  const custom=Object.entries(c).filter(([k,v])=>!['card_balance','limit','expiry','delivery','card_type','card_holder','card_network','card_number','quantity','entry_fee','display_status'].includes(k)&&v!==''&&v!==null&&v!==undefined).map(([k,v])=>`<div>${esc(fieldLabel(k))}: ${esc(typeof v==='object'?JSON.stringify(v):v)}</div>`).join('');\n  return html+custom;\n}\nasync function loadProduct(){\n  if(!productId){$('productStatus').textContent='● PRODUCT NOT SELECTED';$('productDescription').textContent='Please return to the store and select a product.';return;}\n  const r=await db.from('products').select('id,name,description,price,image_url,category,brand,is_active,custom_fields').eq('id',productId).maybeSingle();\n  if(r.error||!r.data){$('productStatus').textContent='● PRODUCT NOT FOUND';return;}\n  const p=r.data,c=p.custom_fields&&typeof p.custom_fields==='object'?p.custom_fields:{};\n  const name=p.name||'CARD'; const category=p.category||'CARD DETAILS'; const brand=p.brand||c.brand||'NEXVORA';\n  const network=c.card_network||''; const number=c.card_number||''; const holder=c.card_holder||'';\n  document.title='NEXVORA — '+name;\n  $('productTitle').innerHTML=esc(name)+'<br><span>'+esc(category)+'</span>';\n  $('productDescription').textContent=p.description||'';\n  $('productPrice').textContent=money(p.price);\n  $('productStatus').textContent=p.is_active?'● AVAILABLE':'● UNAVAILABLE';\n  const card=document.querySelector('.digital-card');\n  card.querySelector('.brand').textContent=brand;\n  card.querySelector('.number').textContent=number||'•••• •••• ••••';\n  card.querySelector('.card-bottom span').textContent=c.card_type||category;\n  card.querySelector('.card-bottom strong').textContent=network||brand;\n  $('productFeatures').innerHTML=renderCardFields(c,p);\n  if(c.quantity!==undefined&&c.quantity!==null&&String(c.quantity)!==''){}\n  if(p.image_url){\n    card.style.backgroundImage=`url("${String(p.image_url).replace(/"/g,'&quot;')}")`;\n    card.style.backgroundSize='cover'; card.style.backgroundPosition='center';\n  }\n  const validPrice=p.price!==null&&p.price!==''&&!Number.isNaN(Number(p.price))&&Number(p.price)>0;\n  if(!p.is_active){$('buyNow').style.display='none';$('buyBalance').style.display='none';}\n  $('buyNow').onclick=e=>{e.preventDefault();if(!validPrice){alert('This product has no purchase price yet.');return;}location.href='payment.html?product_id='+encodeURIComponent(p.id)+'&amount='+encodeURIComponent(p.price)+'&mode=product';};\n  $('buyBalance').onclick=e=>{e.preventDefault();if(!validPrice){alert('This product has no purchase price yet.');return;}location.href='payment.html?product_id='+encodeURIComponent(p.id)+'&amount='+encodeURIComponent(p.price)+'&mode=balance';};\n  $('addToCart').onclick=e=>{e.preventDefault();let cart=JSON.parse(localStorage.getItem('nexvora_cart')||'[]');let x=cart.find(x=>String(x.id)===String(p.id));if(x)x.quantity=(x.quantity||1)+1;else cart.push({id:p.id,name:p.name||'',price:p.price??null,image_url:p.image_url||null,quantity:1});localStorage.setItem('nexvora_cart',JSON.stringify(cart));$('addToCart').textContent='ADDED TO CART ✓';};\n}\nloadProduct();\n</script>\n
 </body>
 </html>
