@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXVORA — Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#010302;color:#f4fff9;font-family:Rajdhani,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-5;background:linear-gradient(rgba(0,255,100,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,100,.035) 1px,transparent 1px);background-size:55px 55px;transform:perspective(700px) rotateX(58deg) scale(1.8);transform-origin:center bottom}
+body:after{content:"";position:fixed;inset:0;z-index:-4;background:radial-gradient(circle at 50% 20%,rgba(0,255,100,.13),transparent 32%),linear-gradient(180deg,#000,#020604 55%,#000)}
+.navbar{height:78px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 4%;background:rgba(0,3,2,.88);backdrop-filter:blur(18px);border-bottom:1px solid #42ff8b2e}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}.logo-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid #42ff8b;color:#42ff8b;font:800 25px Orbitron;clip-path:polygon(25% 0,100% 0,75% 100%,0 100%);text-shadow:0 0 14px #42ff8b}.logo-name{font:800 20px Orbitron;letter-spacing:3px}.logo-sub{font-size:8px;letter-spacing:3px;color:#42ff8b}
+.nav{display:flex;align-items:center;gap:4px}.nav a{min-width:62px;padding:7px 7px;border:1px solid transparent;border-radius:6px;color:#b9c8c0;text-decoration:none;text-align:center;font:9px Orbitron}.nav a span{display:block;font:8px Rajdhani;margin-top:3px;white-space:nowrap}.nav a:hover,.nav a.active{color:#42ff8b;border-color:#42ff8b55;background:#42ff8b0d}.cart{position:relative}.cart b{position:absolute;right:1px;top:0;min-width:15px;height:15px;display:grid;place-items:center;border-radius:50%;background:#42ff8b;color:#001006;font:8px Orbitron}
+.container{width:min(1450px,92%);margin:auto;padding:46px 0 80px}.system{color:#42ff8b;font:10px Orbitron;letter-spacing:2px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#42ff8b;box-shadow:0 0 14px #42ff8b;margin-right:8px}
+h1{margin-top:15px;font:800 clamp(32px,5vw,66px) Orbitron;letter-spacing:-2px}h1 span{color:#42ff8b;text-shadow:0 0 24px #42ff8b55}.subtitle{margin-top:10px;color:#7c8b84;letter-spacing:1.5px;font-size:14px}
+.toolbar{margin-top:32px;padding:14px 18px;border:1px solid #42ff8b24;background:#020604;display:flex;align-items:center;justify-content:space-between;gap:12px}.view-title{font:11px Orbitron;color:#42ff8b;letter-spacing:1px}.view-note{color:#65766d;font-size:11px}
+.groups{margin-top:20px;display:grid;gap:18px}.group{border:1px solid #42ff8b24;background:linear-gradient(145deg,#06100a,#020604);border-radius:10px;overflow:hidden}.group-head{padding:15px 18px;border-bottom:1px solid #42ff8b18;display:flex;justify-content:space-between;align-items:center}.group-head h2{font:13px Orbitron;color:#dffff0}.group-head h2 span{color:#42ff8b}.group-head small{color:#68776f;font-size:10px}.group-products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px}
+.product{border:1px solid #42ff8b24;background:#010403;border-radius:9px;overflow:hidden;transition:.22s}.product:hover{border-color:#42ff8b77;box-shadow:0 0 22px #42ff8b12;transform:translateY(-2px)}.media{height:155px;background:#020604;display:grid;place-items:center}.media img{width:100%;height:100%;object-fit:cover}.fallback{width:92%;height:78%;border:1px solid #42ff8b;border-radius:9px;padding:12px;background:linear-gradient(145deg,#08150d,#010201);box-shadow:inset 0 0 20px #42ff8b0b}.fallback b{font:12px Orbitron;color:#42ff8b}.chip{width:34px;height:23px;margin-top:22px;border:1px solid #9dffbd;border-radius:5px;background:linear-gradient(135deg,#183b27,#79ff9e)}.fallback small{display:block;margin-top:15px;color:#91a299;font-size:10px}.pbody{padding:13px}.tag{color:#42ff8b;font:8px Orbitron;letter-spacing:1px}.pbody h3{margin-top:7px;font:13px Orbitron;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.desc{margin-top:5px;color:#718078;font-size:11px;min-height:30px}.price{margin-top:11px;color:#42ff8b;font:700 18px Orbitron}.stock{color:#42ff8b;font-size:10px;margin-top:4px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.actions a,.actions button{padding:10px 6px;text-align:center;text-decoration:none;font:8px Orbitron;letter-spacing:.5px;cursor:pointer}.details{border:1px solid #42ff8b55;color:#dffff0}.buy{background:#42ff8b;color:#001006;border:1px solid #42ff8b}.add{grid-column:1/-1;border:1px solid #42ff8b55;background:#42ff8b0a;color:#42ff8b}.add.added{background:#42ff8b;color:#001006}
+.empty{padding:30px;text-align:center;color:#718078;font:10px Orbitron;letter-spacing:1px}.toast{position:fixed;right:18px;bottom:18px;z-index:100;padding:13px 16px;border:1px solid #42ff8b;background:#001006;color:#dffff0;font:9px Orbitron;opacity:0;transform:translateY(12px);transition:.2s}.toast.show{opacity:1;transform:none}
+footer{border-top:1px solid #42ff8b22;padding:24px 4%;display:flex;justify-content:space-between;color:#536158;font-size:10px}footer b{color:#42ff8b;font:9px Orbitron}
+@media(max-width:1000px){.group-products{grid-template-columns:repeat(2,1fr)}.nav a{min-width:52px}.nav a span{display:none}}
+@media(max-width:650px){.navbar{padding:0 12px}.logo-name{font-size:15px}.logo-mark{width:32px;height:32px;font-size:21px}.nav{gap:2px}.nav a{min-width:37px;padding:7px 4px;font-size:8px}.group-products{grid-template-columns:1fr}.container{width:94%;padding-top:35px}.toolbar{align-items:flex-start;flex-direction:column}.media{height:175px}footer{flex-direction:column;gap:8px}}
+
+.topup-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:16px}
+.topup-item{position:relative;display:grid;grid-template-columns:120px 1fr 150px;align-items:stretch;min-height:170px;border:1px solid #42ff8b45;border-radius:12px;background:linear-gradient(145deg,#07140c,#010503);overflow:hidden;cursor:pointer;transition:.22s;text-decoration:none;color:#f4fff9}
+.topup-item:hover{border-color:#42ff8b;box-shadow:0 0 28px #42ff8b20;transform:translateY(-2px)}
+.topup-price{display:flex;align-items:center;justify-content:center;padding:14px;background:linear-gradient(180deg,#06150c,#020604);border-right:1px solid #42ff8b24}
+.topup-price .amount{color:#42ff8b;font:800 23px Orbitron;text-shadow:0 0 12px #42ff8b35;writing-mode:horizontal-tb}
+.topup-price small{display:none}
+.topup-price .arrow{position:absolute;right:10px;bottom:9px;color:#42ff8b;font:17px Orbitron}
+.topup-mid{position:relative;padding:15px 16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.topup-game{color:#42ff8b;font:8px Orbitron;letter-spacing:1.5px}
+.topup-name{margin-top:6px;font:800 clamp(18px,2vw,28px) Orbitron;line-height:1.15;color:#f4fff9;text-transform:uppercase}
+.topup-unit{margin-top:7px;color:#9dffbd;font:700 12px Rajdhani;letter-spacing:1px}
+.topup-region{margin-top:4px;color:#65766d;font-size:9px}
+.diamond-pile{position:relative;width:125px;height:108px;margin:auto;filter:drop-shadow(0 0 8px #42ff8b18)}
+.diamond{position:absolute;width:22px;height:30px;clip-path:polygon(50% 0,100% 35%,78% 100%,22% 100%,0 35%);background:linear-gradient(145deg,#dffff0,#42ff8b 58%,#08753b);border:1px solid #caffdf}
+.diamond:nth-child(1){left:50px;top:2px;transform:rotate(-4deg)}
+.diamond:nth-child(2){left:25px;top:20px;transform:rotate(12deg) scale(.88)}
+.diamond:nth-child(3){left:76px;top:23px;transform:rotate(-10deg) scale(.9)}
+.diamond:nth-child(4){left:5px;top:43px;transform:rotate(8deg) scale(.72)}
+.diamond:nth-child(5){left:48px;top:42px;transform:rotate(-5deg) scale(1.05)}
+.diamond:nth-child(6){left:91px;top:47px;transform:rotate(9deg) scale(.75)}
+.diamond:nth-child(7){left:27px;top:65px;transform:rotate(-12deg) scale(.8)}
+.diamond:nth-child(8){left:67px;top:70px;transform:rotate(7deg) scale(.92)}
+.diamond:nth-child(9){left:108px;top:68px;transform:rotate(-8deg) scale(.62)}
+.diamond:nth-child(10){left:1px;top:78px;transform:rotate(5deg) scale(.55)}
+.diamond:nth-child(11){left:50px;top:83px;transform:rotate(-4deg) scale(.7)}
+.diamond:nth-child(12){left:87px;top:88px;transform:rotate(12deg) scale(.5)}
+@media(max-width:900px){.topup-list{grid-template-columns:1fr}}
+@media(max-width:560px){.topup-item{grid-template-columns:82px 1fr 105px;min-height:135px}.topup-price .amount{font-size:16px}.topup-mid{padding:10px}.topup-name{font-size:16px}.topup-unit{font-size:10px}.diamond-pile{transform:scale(.8);transform-origin:center}.topup-price .arrow{right:7px;bottom:6px}}
+</style>
+</head>
+<body>
+<header class="navbar">
+  <a class="logo" href="home.html"><div class="logo-mark">N</div><div><div class="logo-name">NEXVORA</div><div class="logo-sub">DIGITAL PLATFORM</div></div></a>
+  <nav class="nav">
+    <a href="home.html">⌂<span>HOME</span></a><a class="active" href="store.html">▣<span>STORE</span></a><a href="dashboard.html">◉<span>DASHBOARD</span></a><a href="payment.html">◈<span>PAYMENT</span></a><a href="payment.html">💳<span>ADD BALANCE</span></a><a href="https://t.me/nexvoraplatform" target="_blank" rel="noopener">✈<span>JOIN CHANNEL</span></a><a href="https://t.me/virexa_x" target="_blank" rel="noopener">🎧<span>SUPPORT</span></a><a class="cart" href="cart.html">🛒<span>CART</span><b id="cartCount">0</b></a>
+  </nav>
+</header>
+<main class="container">
+  <div class="system"><span class="dot"></span>NEXVORA STORE ONLINE</div>
+  <h1>POPULAR <span>CARDS &amp; PRODUCTS</span></h1>
+  <p class="subtitle">ALL AVAILABLE PRODUCTS — CHOOSE DIRECTLY, NO CATEGORY SELECTION PAGE</p>
+  <div class="toolbar"><div class="view-title" id="viewTitle">ALL PRODUCTS</div><div class="view-note">Tap any product to open its details</div></div>
+  <section class="groups" id="groups"><div class="empty">LOADING PRODUCTS...</div></section>
+</main>
+<div class="toast" id="toast"></div>
+<footer><div>NEXVORA DIGITAL STORE</div><b>● SYSTEM ONLINE</b></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+const db=window.supabase.createClient('https://lkspavoccfcwgufmczzq.supabase.co','sb_publishable_Dcahy9-eTRD5qe_5wz1z8A_hhQEn_1T');
+const groupsEl=document.getElementById('groups'),cartCount=document.getElementById('cartCount'),toast=document.getElementById('toast'),viewTitle=document.getElementById('viewTitle');
+let allProducts=[];
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+const norm=v=>String(v??'').trim().toUpperCase();
+const money=v=>Number(v||0).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});
+function cart(){try{const x=JSON.parse(localStorage.getItem('nexvora_cart')||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function countCart(){cartCount.textContent=cart().reduce((n,x)=>n+Math.max(1,Number(x.quantity)||1),0)}
+function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1800)}
+function addCart(p,b){const c=cart(),id=String(p.id),x=c.find(v=>String(v.id)===id);if(x)x.quantity=(Number(x.quantity)||1)+1;else c.push({id:p.id,name:p.name||'',price:Number(p.price)||0,image_url:p.image_url||'',quantity:1});localStorage.setItem('nexvora_cart',JSON.stringify(c));countCart();if(b){b.textContent='ADDED ✓';b.classList.add('added');setTimeout(()=>{b.textContent='ADD TO CART';b.classList.remove('added')},1000)}showToast('PRODUCT ADDED TO CART')}
+function card(p){
+ const c=p.custom_fields&&typeof p.custom_fields==='object'&&!Array.isArray(p.custom_fields)?p.custom_fields:{};
+ const image=p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name||'Top Up')}" loading="lazy">`:`<div class="fallback"><b>${esc(c.game||p.brand||'NEXVORA')}</b><div class="chip"></div><small>${esc(p.category||'DIGITAL PRODUCT')}</small></div>`;
+ const info=[c.game,c.denomination,c.region,c.card_network,c.card_type,c.topup_unit].filter(Boolean).slice(0,3).join(' • ')||p.description||'NEXVORA digital product';
+ return `<article class="product"><div class="media">${image}</div><div class="pbody"><div class="tag">${esc(p.category||'DIGITAL PRODUCT')}</div><h3>${esc(p.name||'UNNAMED PRODUCT')}</h3><div class="desc">${esc(info)}</div><div class="price">₹${money(p.price)}</div><div class="stock">● IN STOCK</div><div class="actions"><a class="details" href="product.html?id=${encodeURIComponent(p.id)}">VIEW DETAILS</a><a class="buy" href="payment.html?product_id=${encodeURIComponent(p.id)}&amount=${encodeURIComponent(p.price)}&mode=product">BUY NOW</a><button class="add" data-id="${esc(p.id)}">ADD TO CART</button></div></div></article>`
+}
+function topupCard(p){
+ const c=p.custom_fields&&typeof p.custom_fields==='object'&&!Array.isArray(p.custom_fields)?p.custom_fields:{};
+ const game=String(c.game||'TOP UP').toUpperCase();
+ const unit=String(c.topup_unit||'DIAMONDS').toUpperCase();
+ const rawPkg=String(c.package||c.denomination||p.name||'TOP UP PACKAGE');
+ const nums=rawPkg.match(/[0-9]+(?:\\.[0-9]+)?/g)||[];
+ const qty=nums.length?nums[0]:rawPkg;
+ const region=c.region||'India';
+ const diamonds=Array.from({length:12},(_,i)=>`<span class="diamond d${i+1}"></span>`).join('');
+ return `<a class="topup-item" href="product.html?id=${encodeURIComponent(p.id)}">
+   <div class="topup-price"><div class="amount">₹${money(p.price)}</div><span class="arrow">→</span></div>
+   <div class="topup-mid">
+     <div class="topup-game">${esc(game)} TOP UP</div>
+     <div class="topup-name">${esc(qty)} ${esc(unit)}</div>
+     <div class="topup-unit">💎 ${esc(qty)} DIAMONDS</div>
+     <div class="topup-region">REGION: ${esc(region)}</div>
+   </div>
+   <div class="diamond-pile" aria-hidden="true">${diamonds}</div>
+ </a>`;
+}
+
+function groupName(cat){const n=norm(cat);if(n==='DIGITAL PRODUCTS')return 'VIRTUAL CARDS & DIGITAL PRODUCTS';if(n==='GOOGLE PLAY STORE CODE')return 'GOOGLE PLAY STORE CODE';if(n==='TOPUP')return 'TOP UP';if(n==='GIFT CARD')return 'GIFT CARDS';return cat||'OTHER PRODUCTS'}
+function render(rows){
+ if(!rows.length){groupsEl.innerHTML='<div class="empty">NO PRODUCTS FOUND.</div>';return}
+ const q=new URLSearchParams(location.search), cat=q.get('category');
+ if(norm(cat)==='TOPUP'){
+   const topups=rows.filter(p=>norm(p.category)==='TOPUP');
+   if(!topups.length){groupsEl.innerHTML='<div class="empty">NO TOP UP PACKAGES AVAILABLE.</div>';return}
+   const game=q.get('game');
+   const filtered=game?topups.filter(p=>norm(p.custom_fields?.game)===norm(game)):topups;
+   groupsEl.innerHTML=`<section class="group"><div class="group-head"><h2><span>${esc(game||'GAME')}</span> TOP UP PACKAGES</h2><small>${filtered.length} PACKAGE${filtered.length===1?'':'S'}</small></div><div class="topup-list">${filtered.map(topupCard).join('')}</div></section>`;
+   return;
+ }
+ const map=new Map();rows.forEach(p=>{const key=norm(p.category)||'OTHER PRODUCTS';if(!map.has(key))map.set(key,[]);map.get(key).push(p)});
+ groupsEl.innerHTML=[...map.entries()].map(([key,items])=>`<section class="group"><div class="group-head"><h2>${esc(groupName(key))}</h2><small>${items.length} PRODUCT${items.length===1?'':'S'}</small></div><div class="group-products">${items.map(card).join('')}</div></section>`).join('')
+}
+
+async function init(){const s=await db.auth.getSession();if(!s.data.session){location.href='login.html';return}const r=await db.from('products').select('id,name,description,price,image_url,category,brand,custom_fields,is_active,created_at').eq('is_active',true).order('created_at',{ascending:false});if(r.error){groupsEl.innerHTML='<div class="empty">PRODUCTS COULD NOT BE LOADED.</div>';return}allProducts=r.data||[];const q=new URLSearchParams(location.search);const cat=q.get('category');const view=q.get('view');if(cat&&!view){const filtered=allProducts.filter(p=>norm(p.category)===norm(cat));viewTitle.textContent=groupName(cat);render(filtered)}else{viewTitle.textContent='ALL PRODUCTS';render(allProducts)}countCart()}
+groupsEl.addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const p=allProducts.find(x=>String(x.id)===String(b.dataset.id));if(p)addCart(p,b)});window.addEventListener('storage',countCart);init();
+</script>
+</body>
+</html>
