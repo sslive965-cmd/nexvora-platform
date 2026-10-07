@@ -25,6 +25,7 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
 @media(max-width:1150px){.brand{min-width:190px;font-size:20px}.nav a{padding:9px 8px}.nav a span{display:none}.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(3,1fr)}.steps{grid-template-columns:repeat(3,1fr)}.step:nth-child(3):after{display:none}.hero-art{opacity:.72}.trust-item b{font-size:9px}}
 @media(max-width:760px){.top{height:62px;padding:0 12px;gap:7px}.brand{min-width:auto;font-size:16px;letter-spacing:2px}.brand:before{width:31px;height:31px;margin-right:5px}.brand small{margin-left:38px;font-size:6px;letter-spacing:2px}.nav{gap:3px}.nav a{padding:8px 7px}.nav a i{font-size:13px}.profile{width:32px;height:32px}.hero{min-height:370px}.hero-inner{padding:45px 22px}.hero h1{font-size:43px}.hero p{font-size:15px}.hero-art{right:-12%;width:70%;opacity:.3}.slogan{display:none}.trust{grid-template-columns:1fr 1fr}.trust-item{padding:10px 5px}.trust-item:nth-child(2){border-right:0}.trust-item:nth-child(-n+2){border-bottom:1px solid #42ff8b28}.categories{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.step:nth-child(2):after,.step:nth-child(4):after{display:none}.wrap{width:95%}}
 @media(max-width:460px){.nav a span{display:none}.nav a{border-color:transparent;background:transparent;padding:6px}.brand{font-size:13px}.hero{min-height:350px}.hero h1{font-size:36px}.categories,.products,.steps{grid-template-columns:1fr 1fr}.cat{min-height:105px}.media{height:140px}.trust b{font-size:8px}.trust small{font-size:8px}.section-head h2{font-size:12px}footer{flex-direction:column;gap:10px}}
+.home-actions{display:flex;gap:8px;margin-top:10px}.home-actions .details,.home-actions .buy{flex:1;text-align:center;text-decoration:none;padding:10px 6px;border:1px solid #42ff8b;border-radius:8px;font:9px Orbitron;letter-spacing:.7px}.home-actions .details{color:#eafff1;background:transparent}.home-actions .buy{color:#001006;background:#42ff8b}@media(max-width:460px){.home-actions{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -56,12 +57,12 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
   <section id="categories">
     <div class="section-head"><h2>POPULAR CARD CATEGORIES</h2><span>SELECT CATEGORY ›</span></div>
     <div class="categories">
-      <a class="cat" href="store.html"><div class="cat-icon">FF</div><strong>Free Fire Cards</strong><small>Game cards</small><em>›</em></a>
-      <a class="cat" href="store.html"><div class="cat-icon">▶</div><strong>Google Play Cards</strong><small>Play Store</small><em>›</em></a>
-      <a class="cat" href="store.html"><div class="cat-icon">◉</div><strong>Steam Cards</strong><small>Steam wallet</small><em>›</em></a>
-      <a class="cat" href="store.html"><div class="cat-icon">a</div><strong>Amazon Cards</strong><small>Amazon gift cards</small><em>›</em></a>
-      <a class="cat" href="store.html"><div class="cat-icon">■</div><strong>Roblox Cards</strong><small>Robux cards</small><em>›</em></a>
-      <a class="cat" href="store.html"><div class="cat-icon">▦</div><strong>Other Cards</strong><small>More categories</small><em>›</em></a>
+      <a class="cat" href="store.html?category=TOPUP&game=Free%20Fire"><div class="cat-icon">FF</div><strong>Free Fire Cards</strong><small>Game cards</small><em>›</em></a>
+      <a class="cat" href="store.html?category=GOOGLE%20PLAY%20STORE%20CODE"><div class="cat-icon">▶</div><strong>Google Play Cards</strong><small>Play Store</small><em>›</em></a>
+      <a class="cat" href="store.html?category=STEAM%20CARDS"><div class="cat-icon">◉</div><strong>Steam Cards</strong><small>Steam wallet</small><em>›</em></a>
+      <a class="cat" href="store.html?category=AMAZON%20GIFT%20CARD"><div class="cat-icon">a</div><strong>Amazon Cards</strong><small>Amazon gift cards</small><em>›</em></a>
+      <a class="cat" href="store.html?category=ROBLOX%20CARD"><div class="cat-icon">■</div><strong>Roblox Cards</strong><small>Robux cards</small><em>›</em></a>
+      <a class="cat" href="store.html?view=all"><div class="cat-icon">▦</div><strong>Other Cards</strong><small>More categories</small><em>›</em></a>
     </div>
   </section>
 
@@ -106,7 +107,7 @@ function money(v){return Number(v||0).toLocaleString('en-IN',{maximumFractionDig
 function productCard(p){
   const c=p.custom_fields&&typeof p.custom_fields==='object'&&!Array.isArray(p.custom_fields)?p.custom_fields:{};
   const image=p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}">`:`<div class="fallback"><b>${esc(c.game||p.brand||'NEXVORA')}</b><div class="chip"></div><small>${esc(p.category||'DIGITAL PRODUCT')}</small></div>`;
-  return `<article class="product"><div class="media">${image}</div><div class="pbody"><div class="tag">${esc(p.category||'DIGITAL PRODUCT')}</div><h3>${esc(p.name||'UNNAMED PRODUCT')}</h3><p class="desc">${esc(p.description||'Digital product available from NEXVORA.')}</p><div class="pfoot"><div><div class="price">₹${money(p.price)}</div><div class="stock">• In Stock</div></div></div><a class="buy" href="product.html?id=${encodeURIComponent(p.id)}">🛒 &nbsp; BUY NOW</a></div></article>`
+  return `<article class="product"><div class="media">${image}</div><div class="pbody"><div class="tag">${esc(p.category||'DIGITAL PRODUCT')}</div><h3>${esc(p.name||'UNNAMED PRODUCT')}</h3><p class="desc">${esc(p.description||'Digital product available from NEXVORA.')}</p><div class="pfoot"><div><div class="price">₹${money(p.price)}</div><div class="stock">• In Stock</div></div></div><div class="home-actions"><a class="details" href="product.html?id=${encodeURIComponent(p.id)}">DETAILS</a><a class="buy" href="payment.html?product_id=${encodeURIComponent(p.id)}&amount=${encodeURIComponent(p.price)}&mode=product">🛒 &nbsp; BUY NOW</a></div></div></article>`
 }
 async function init(){
   const s=await db.auth.getSession();
