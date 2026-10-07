@@ -342,6 +342,7 @@ input:focus{
             <div class="product-info" id="productInfo" style="display:none;">
                 <span>PRODUCT</span>
                 <strong id="productName">Loading...</strong>
+                <div id="topupOrderInfo" style="display:none;margin-top:10px;color:#8fa095;font-size:12px;line-height:1.7"></div>
             </div>
             <div class="amount-label">AMOUNT TO PAY</div>
             <div class="amount" id="displayAmount">₹0</div>
@@ -637,6 +638,14 @@ async function loadProductPayment() {
         pageSubtitle.textContent = "Pay the exact price of the selected product.";
         productInfo.style.display = "block";
         productName.textContent = data.name || "NEXVORA Product";
+        const topupOrderInfo = document.getElementById("topupOrderInfo");
+        const topupGame = params.get("game") || "";
+        const topupUid = params.get("game_uid") || "";
+        const topupRegion = params.get("region") || "";
+        if (topupGame || topupUid || topupRegion) {
+            topupOrderInfo.style.display = "block";
+            topupOrderInfo.innerHTML = `<b style="color:#42ff8b">${topupGame || "TOP UP"}</b><br>GAME UID: <b style="color:#fff">${String(topupUid).replace(/</g,"&lt;")}</b><br>REGION: <b style="color:#fff">${String(topupRegion).replace(/</g,"&lt;")}</b>`;
+        }
         displayAmount.textContent = formatINR(productPrice);
         amountInput.value = productPrice.toFixed(2);
         amountInput.readOnly = true;
