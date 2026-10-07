@@ -29,7 +29,13 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
 
 .topup-home{position:relative;display:grid;grid-template-columns:90px 1fr 105px;align-items:center;min-height:150px;border:1px solid #42ff8b55;border-radius:12px;background:linear-gradient(145deg,#06130b,#020604);overflow:hidden;text-decoration:none;color:#f4fff9}.topup-home .home-price{height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid #42ff8b25;color:#42ff8b;font:800 18px Orbitron}.topup-home .home-info{padding:16px}.topup-home .home-game{color:#42ff8b;font:8px Orbitron;letter-spacing:1.4px}.topup-home .home-qty{margin-top:5px;color:#fff;font:800 18px Orbitron}.topup-home .home-sub{margin-top:6px;color:#9dffbd;font:700 11px Rajdhani}.home-diamonds{position:relative;width:82px;height:68px;margin:auto;filter:drop-shadow(0 0 7px #20a9ff40)}.home-diamond{position:absolute;width:13px;height:19px;clip-path:polygon(50% 0,100% 35%,78% 100%,22% 100%,0 35%);background:linear-gradient(145deg,#effcff,#49c9ff 48%,#0876d8);border:1px solid #b9edff;box-shadow:0 0 6px #20a9ff55}.home-diamond:nth-child(1){left:34px;top:0}.home-diamond:nth-child(2){left:16px;top:13px;transform:rotate(10deg) scale(.9)}.home-diamond:nth-child(3){left:51px;top:14px;transform:rotate(-8deg) scale(.88)}.home-diamond:nth-child(4){left:2px;top:29px;transform:rotate(8deg) scale(.72)}.home-diamond:nth-child(5){left:31px;top:27px;transform:scale(1.02)}.home-diamond:nth-child(6){left:59px;top:31px;transform:rotate(-8deg) scale(.72)}.home-diamond:nth-child(7){left:17px;top:45px;transform:rotate(-8deg) scale(.75)}.home-diamond:nth-child(8){left:44px;top:47px;transform:rotate(7deg) scale(.8)}@media(max-width:560px){.topup-home{grid-template-columns:70px 1fr 82px;min-height:125px}.topup-home .home-price{font-size:14px}.topup-home .home-info{padding:10px}.topup-home .home-qty{font-size:15px}.home-diamonds{transform:scale(.8)}}
 
-.membership-home .home-qty{font-size:15px;line-height:1.25}.membership-diamonds .home-diamond{transform:scale(.78)}.price-buy{font-weight:800}
+.membership-home .home-qty{font-size:15px;line-height:1.25}
+.membership-home .home-diamonds{display:grid;place-items:center}
+.membership-art-home{position:relative;width:74px;height:58px;border:1px solid #42ff8b66;border-radius:9px;background:linear-gradient(145deg,#0b2114,#010403);box-shadow:inset 0 0 18px #42ff8b12}
+.membership-art-home:before{content:"";position:absolute;left:14px;right:14px;top:14px;height:25px;border:1px solid #42ff8b66;border-radius:6px;background:#06130b}
+.membership-art-home:after{content:"★";position:absolute;left:0;right:0;top:12px;text-align:center;color:#42ff8b;font:800 18px Orbitron;text-shadow:0 0 9px #42ff8b66}
+.membership-art-home span{position:absolute;left:0;right:0;bottom:5px;text-align:center;color:#dffff0;font:800 6px Orbitron;letter-spacing:.5px}
+.price-buy{font-weight:800}
 </style>
 </head>
 <body>
@@ -116,9 +122,11 @@ function productCard(p){
     const qty=m[0]||raw;
     const type=String(c.package_type||'DIAMONDS').toUpperCase();
     const isMembership=type.includes('WEEKLY')||type.includes('MONTHLY');
-    const label=isMembership?type:(qty+' '+String(c.topup_unit||'DIAMONDS').toUpperCase());
-    const ds=Array.from({length:isMembership?5:7},(_,i)=>`<span class="home-diamond d${i+1}"></span>`).join('');
-    return `<a class="topup-home ${isMembership?'membership-home':''}" href="product.html?id=${encodeURIComponent(p.id)}"><div class="home-price">₹${money(p.price)}</div><div class="home-info"><div class="home-game">FREE FIRE TOP UP</div><div class="home-qty">${esc(label)}</div><div class="home-sub">${isMembership?'Membership • UID + Region':'Tap to select • UID + Region'}</div></div><div class="home-diamonds ${isMembership?'membership-diamonds':''}">${ds}</div></a>`;
+    const label=isMembership?(type==='WEEKLY MEMBERSHIP LITE'?'WEEKLY LITE':type==='WEEKLY MEMBERSHIP'?'WEEKLY MEMBERSHIP':'MONTHLY MEMBERSHIP'):(qty+' '+String(c.topup_unit||'DIAMONDS').toUpperCase());
+    const membershipBadge=type==='MONTHLY MEMBERSHIP'?'30 DAYS':type==='WEEKLY MEMBERSHIP LITE'?'LITE • 7 DAYS':'7 DAYS';
+    const ds=Array.from({length:7},(_,i)=>`<span class="home-diamond d${i+1}"></span>`).join('');
+    const visual=isMembership?`<div class="membership-art-home"><span>${membershipBadge}</span></div>`:ds;
+    return `<a class="topup-home ${isMembership?'membership-home':''}" href="product.html?id=${encodeURIComponent(p.id)}"><div class="home-price">₹${money(p.price)}</div><div class="home-info"><div class="home-game">FREE FIRE TOP UP</div><div class="home-qty">${esc(label)}</div><div class="home-sub">${isMembership?'Membership • UID + Region':'Tap to select • UID + Region'}</div></div><div class="home-diamonds ${isMembership?'membership-diamonds':''}">${visual}</div></a>`;
   }
   const image=p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}">`:`<div class="fallback"><b>${esc(c.game||p.brand||'NEXVORA')}</b><div class="chip"></div><small>${esc(p.category||'DIGITAL PRODUCT')}</small></div>`;
   return `<article class="product"><div class="media">${image}</div><div class="pbody"><div class="tag">${esc(p.category||'DIGITAL PRODUCT')}</div><h3>${esc(p.name||'UNNAMED PRODUCT')}</h3><p class="desc">${esc(p.description||'Digital product available from NEXVORA.')}</p><div class="pfoot"><div><div class="price">₹${money(p.price)}</div><div class="stock">• In Stock</div></div></div><div class="home-actions"><a class="details" href="product.html?id=${encodeURIComponent(p.id)}">DETAILS</a><a class="buy price-buy" href="payment.html?product_id=${encodeURIComponent(p.id)}&amount=${encodeURIComponent(p.price)}&mode=product">₹${money(p.price)}</a></div></div></article>`
