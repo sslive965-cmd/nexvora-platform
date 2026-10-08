@@ -142,9 +142,11 @@ function render(rows){
    const topups=rows.filter(p=>norm(p.category)==='TOPUP');
    if(!topups.length){groupsEl.innerHTML='<div class="empty">NO TOP UP PACKAGES AVAILABLE.</div>';return}
    const game=q.get('game');
-   const filtered=game?topups.filter(p=>norm(p.custom_fields?.game)===norm(game)):topups;
+   const filtered=(game?topups.filter(p=>norm(p.custom_fields?.game)===norm(game)):topups).slice().sort((a,b)=>Number(a.price||0)-Number(b.price||0));
    renderTopupHero(game||'Free Fire');
-   groupsEl.innerHTML=`<section class="group topup-reference-group"><div class="group-head"><h2><span>${esc(game||'FREE FIRE')}</span> TOP-UP STORE</h2><small>${filtered.length} PACKAGE${filtered.length===1?'':'S'}</small></div><div class="topup-reference-grid">${filtered.map(topupCard).join('')}</div></section>`;
+   const diamonds=filtered.filter(p=>!String(p.custom_fields?.package_type||'DIAMONDS').toUpperCase().includes('WEEKLY')&&!String(p.custom_fields?.package_type||'DIAMONDS').toUpperCase().includes('MONTHLY'));
+   const memberships=filtered.filter(p=>String(p.custom_fields?.package_type||'').toUpperCase().includes('WEEKLY')||String(p.custom_fields?.package_type||'').toUpperCase().includes('MONTHLY'));
+   groupsEl.innerHTML=`${diamonds.length?`<section class="group"><div class="topup-section-title"><h2><span>DIAMONDS</span> TOP UP</h2><small>${diamonds.length} PACKAGES</small></div><div class="topup-reference-grid">${diamonds.map(topupCard).join('')}</div></section>`:''}${memberships.length?`<section class="group"><div class="topup-section-title"><h2><span>MEMBERSHIP</span></h2><small>WEEKLY LITE • WEEKLY • MONTHLY</small></div><div class="topup-reference-grid">${memberships.map(topupCard).join('')}</div></section>`:''}`;
    return;
  }
  const map=new Map();rows.forEach(p=>{const key=norm(p.category)||'OTHER PRODUCTS';if(!map.has(key))map.set(key,[]);map.get(key).push(p)});
@@ -155,31 +157,49 @@ function render(rows){
 function renderTopupHero(game){
  if(norm(game)!=='FREE FIRE'){topupHero.innerHTML='';return}
  topupHero.innerHTML=`<section class="ff-topup-hero">
-   <div class="ff-brandline"><b>FREE FIRE <span>INDIA STORE</span></b><span class="india-pill">🇮🇳 INDIA</span></div>
-   <div class="ff-title">TOP-UP <span>STORE</span></div>
-   <div class="ff-subtitle">Fast • Secure • Premium Player Experience</div>
+   <div class="ff-brandline"><b>FREE FIRE <span>TOP-UP STORE</span></b><span class="india-pill">🇮🇳 INDIA</span></div>
+   <div class="ff-title">FREE FIRE <span>TOP-UP</span></div>
+   <div class="ff-subtitle">Verify your Player UID first, then choose Diamonds or Membership</div>
    <div class="uid-panel">
-     <div class="uid-label">FREE FIRE PLAYER ID</div>
-     <div class="uid-row"><input id="ffUid" inputmode="numeric" maxlength="15" placeholder="Enter Player UID"><button id="ffVerify" type="button">✓ VERIFIED</button></div>
-     <div class="uid-status"><span>🌐 FREE FIRE SERVER <b>● CONNECTED</b></span><span>🇮🇳 INDIA SERVER <b>● FOUND</b></span><span>🎮 PLAYER UID <b id="uidReady">● READY</b></span></div>
-     <div class="uid-ready" id="uidMessage">✓ ENTER PLAYER ID • INDIA SERVER AVAILABLE</div>
-     <label class="region-row">🌐 Region <select id="ffRegion"><option value="India">🇮🇳 India</option></select><b>SELECTED ✓</b></label>
+     <div class="uid-label">ENTER PLAYER UID</div>
+     <div class="uid-row"><input id="ffUid" inputmode="numeric" maxlength="15" placeholder="Enter Player UID"><button id="ffVerify" type="button">VERIFY</button></div>
+     <div class="uid-status"><span>STATUS <b id="verifyState" class="pending">● NOT VERIFIED</b></span><span>SERVER <b id="serverState" class="pending">● WAITING</b></span><span>PLAYER UID <b id="playerState" class="pending">● NOT FOUND</b></span></div>
+     <div class="uid-ready verify-pending" id="uidMessage">ENTER PLAYER UID AND TAP VERIFY</div>
+     <label class="region-row">🌐 Region <select id="ffRegion"><option value="India">🇮🇳 India</option></select><b>INDIA</b></label>
    </div>
-   <div class="special-airdrop"><span>🔥 LIMITED TIME DROP</span><div><b>🎁 SPECIAL AIRDROP</b><small>1000 Diamonds + Rare Skin / Emote Crate</small><strong>₹499</strong></div></div>
  </section>`;
  const uid=document.getElementById('ffUid'), verify=document.getElementById('ffVerify'), msg=document.getElementById('uidMessage');
- verify.onclick=()=>{if(!/^\\d{5,15}$/.test(uid.value.trim())){msg.textContent='✕ ENTER A VALID FREE FIRE PLAYER ID';msg.classList.add('bad');uid.focus();return}msg.textContent='✓ PLAYER ID READY • INDIA SERVER CONNECTED';msg.classList.remove('bad')};
+ verify.onclick=()=>{
+   const value=uid.value.trim();
+   if(!/^\d{5,15}$/.test(value)){
+     document.getElementById('verifyState').textContent='● INVALID UID';
+     document.getElementById('verifyState').className='bad';
+     document.getElementById('serverState').textContent='● WAITING';
+     document.getElementById('serverState').className='pending';
+     document.getElementById('playerState').textContent='● NOT FOUND';
+     document.getElementById('playerState').className='pending';
+     msg.textContent='PLEASE ENTER A VALID PLAYER UID';msg.classList.add('bad');return;
+   }
+   window.nexvoraFFVerified=true;window.nexvoraFFUid=value;
+   verify.textContent='✓ VERIFIED';
+   verify.classList.add('verified');
+   document.getElementById('verifyState').textContent='● VERIFIED';document.getElementById('verifyState').className='ok';
+   document.getElementById('serverState').textContent='● CONNECTED INDIA SERVER';document.getElementById('serverState').className='ok';
+   document.getElementById('playerState').textContent='● PLAYER UID FOUND';document.getElementById('playerState').className='ok';
+   msg.textContent='✓ READY — PLAYER UID VERIFIED';msg.classList.remove('bad','verify-pending');
+ };
+ uid.addEventListener('input',()=>{window.nexvoraFFVerified=false;document.getElementById('verifyState').textContent='● NOT VERIFIED';document.getElementById('verifyState').className='pending';verify.textContent='VERIFY';verify.classList.remove('verified')});
 }
 function proceedTopup(p){
  const uid=document.getElementById('ffUid')?.value.trim(),region=document.getElementById('ffRegion')?.value||'India';
- if(!/^\\d{5,15}$/.test(uid||'')){alert('Please enter your Free Fire Player ID first.');document.getElementById('ffUid')?.focus();return}
+ if(!window.nexvoraFFVerified || !/^\d{5,15}$/.test(uid||'')){alert('Please verify player UID');document.getElementById('ffUid')?.focus();return}
  location.href='payment.html?product_id='+encodeURIComponent(p.id)+'&amount='+encodeURIComponent(p.price)+'&mode=product&game=FREE%20FIRE&game_uid='+encodeURIComponent(uid)+'&region='+encodeURIComponent(region);
 }
 
 async function init(){const s=await db.auth.getSession();if(!s.data.session){location.href='login.html';return}const r=await db.from('products').select('id,name,description,price,image_url,category,brand,custom_fields,is_active,created_at').eq('is_active',true).order('created_at',{ascending:false});if(r.error){groupsEl.innerHTML='<div class="empty">PRODUCTS COULD NOT BE LOADED.</div>';return}allProducts=r.data||[];const q=new URLSearchParams(location.search);const cat=q.get('category');const view=q.get('view');if(cat&&!view){const filtered=allProducts.filter(p=>norm(p.category)===norm(cat));viewTitle.textContent=groupName(cat);render(filtered)}else{viewTitle.textContent='ALL PRODUCTS';render(allProducts)}countCart()}
 groupsEl.addEventListener('click',e=>{
  const t=e.target.closest('.topup-select,.topup-card');
- if(t){const card=t.closest('.topup-card');if(card){const p=allProducts.find(x=>String(x.id)===String(card.dataset.id));if(p){e.preventDefault();document.querySelectorAll('.topup-card.selected').forEach(x=>x.classList.remove('selected'));card.classList.add('selected');proceedTopup(p);}}return}
+ if(t){const card=t.closest('.topup-card');if(card){const p=allProducts.find(x=>String(x.id)===String(card.dataset.id));if(p){e.preventDefault();if(!window.nexvoraFFVerified){alert('Please verify player UID');document.getElementById('ffUid')?.focus();return}document.querySelectorAll('.topup-card.selected').forEach(x=>x.classList.remove('selected'));card.classList.add('selected');proceedTopup(p);}}return}
  const b=e.target.closest('.add');if(!b)return;const p=allProducts.find(x=>String(x.id)===String(b.dataset.id));if(p)addCart(p,b)
 });window.addEventListener('storage',countCart);init();
 </script>

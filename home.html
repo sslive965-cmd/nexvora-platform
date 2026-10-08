@@ -65,6 +65,21 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
 .cat-ff{background:linear-gradient(145deg,#0c3855,#05131f);color:#5ed6ff}
 @media(max-width:1100px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:700px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.product .media{height:135px}.product h3{font-size:11px}.brand-mark{width:58px;height:58px}.brand-visual.visa .brand-mark,.brand-visual.mastercard .brand-mark,.brand-visual.rupay .brand-mark,.brand-visual.amex .brand-mark{width:86px;height:52px}}
+
+/* ACTUAL BRAND LOGOS — used automatically when admin image is empty */
+.real-brand{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:linear-gradient(145deg,#111827,#05070b);position:relative;overflow:hidden}
+.real-brand:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(92,220,255,.16),transparent 48%)}
+.real-brand img{position:relative;z-index:1;width:min(68%,118px);height:min(68%,118px);object-fit:contain;filter:drop-shadow(0 10px 20px rgba(0,0,0,.45))}
+.real-brand span{position:relative;z-index:1;color:#eaf7ff;font:700 9px Rajdhani;letter-spacing:1.4px;text-transform:uppercase;max-width:90%;text-align:center}
+.real-product-image{width:100%;height:100%;object-fit:contain;background:#fff;padding:18px}
+.generic-brand div{position:relative;z-index:1;width:74px;height:74px;border-radius:20px;display:grid;place-items:center;font:900 34px Orbitron;color:#fff;border:1px solid #9c7cff88;background:linear-gradient(145deg,#251b4f,#080611);box-shadow:0 0 28px #9c7cff33}
+
+:root{--neon:#8cff4f;--cyan:#55dfff;--violet:#9b7bff}
+.hero{border-color:#9b7bff55;background:linear-gradient(110deg,#10152b 0%,#060812 48%,#0b1730 100%);box-shadow:inset 0 0 80px #55dfff0d,0 0 40px #9b7bff12}
+.section-head h2,.section-head a{color:var(--cyan)}
+.product-section{border-color:#55dfff28;background:linear-gradient(180deg,#070a14ee,#04050aee)}
+.product{border-color:#9b7bff35;background:linear-gradient(160deg,#111326,#05060b);box-shadow:0 0 0 1px #55dfff08,inset 0 0 24px #9b7bff07}
+.product:hover{border-color:#55dfff;box-shadow:0 0 30px #55dfff1c}
 </style>
 </head>
 <body>
@@ -156,45 +171,28 @@ function brandClass(p,c){
  if(x.includes('AMEX')||x.includes('AMERICAN EXPRESS')) return 'amex';
  return '';
 }
-function productLogo(p,c){
- if(p.image_url) return `<img src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}" loading="lazy">`;
- const cls=brandClass(p,c), x=String(c.brand||p.brand||c.card_network||c.game||'NEXVORA').toUpperCase();
- if(String(p.category||'').toUpperCase()==='TOPUP' && String(c.game||'').toUpperCase()==='FREE FIRE'){
-   const type=String(c.package_type||'DIAMONDS').toUpperCase();
-   if(type.includes('WEEKLY')||type.includes('MONTHLY')){const lite=type.includes('LITE'),monthly=type.includes('MONTHLY');return `<div class="mini-membership ${lite?'lite':monthly?'monthly':''}"><b>${lite?'W LITE':monthly?'M':'W'}</b><span>${monthly?'30 DAYS':'7 DAYS'}</span></div>`}
-   return '<div class="home-mini-topup"><div class="mini-diamond"></div></div>';
- }
- return `<div class="brand-logo ${cls}"><b>${cls==='play'||cls==='steam'||cls==='roblox'?'':esc(x.slice(0,10))}</b><small>${esc(String(p.category||'PRODUCT').replace(/_/g,' ').slice(0,18))}</small></div>`;
-}
-function brandVisual(p,c){
-  const raw=(String(c.card_network||'')+' '+String(p.brand||'')+' '+String(p.name||'')+' '+String(p.category||'')).toUpperCase();
-  let type='generic',mark='N',word=p.brand||p.category||'DIGITAL',sub='NEXVORA';
-  if(raw.includes('GOOGLE PLAY')){type='google';mark='▶';word='Google Play';sub='GIFT CARD'}
-  else if(raw.includes('STEAM')){type='steam';mark='◉';word='STEAM';sub='WALLET CODE'}
-  else if(raw.includes('AMAZON')){type='amazon';mark='a';word='amazon';sub='GIFT CARD'}
-  else if(raw.includes('ROBLOX')){type='roblox';mark='■';word='ROBLOX';sub='GIFT CARD'}
-  else if(raw.includes('FREE FIRE')){type='freefire';mark='♦';word='FREE FIRE';sub='TOP UP'}
-  else if(raw.includes('VISA')){type='visa';mark='VISA';word='VISA';sub='VIRTUAL CARD'}
-  else if(raw.includes('MASTERCARD')){type='mastercard';mark='MC';word='Mastercard';sub='VIRTUAL CARD'}
-  else if(raw.includes('RUPAY')){type='rupay';mark='RuPay';word='RuPay';sub='VIRTUAL CARD'}
-  else if(raw.includes('AMEX')||raw.includes('AMERICAN EXPRESS')){type='amex';mark='AMEX';word='AMEX';sub='VIRTUAL CARD'}
-  return `<div class="brand-visual ${type}"><div class="brand-mark">${esc(mark)}</div><div class="brand-word">${esc(word)}</div><div class="brand-sub">${esc(sub)}</div></div>`;
+function brandLogoUrl(raw){
+ const x=String(raw||'').toUpperCase();
+ if(x.includes('GOOGLE PLAY')||x.includes('PLAY STORE')) return 'https://cdn.simpleicons.org/googleplay';
+ if(x.includes('STEAM')) return 'https://cdn.simpleicons.org/steam';
+ if(x.includes('AMAZON')) return 'https://cdn.simpleicons.org/amazon';
+ if(x.includes('ROBLOX')) return 'https://cdn.simpleicons.org/roblox';
+ if(x.includes('FREE FIRE')) return 'https://cdn.simpleicons.org/garena';
+ if(x.includes('VISA')) return 'https://cdn.simpleicons.org/visa';
+ if(x.includes('MASTERCARD')) return 'https://cdn.simpleicons.org/mastercard';
+ if(x.includes('RUPAY')) return 'https://cdn.simpleicons.org/rupay';
+ if(x.includes('AMEX')||x.includes('AMERICAN EXPRESS')) return 'https://cdn.simpleicons.org/americanexpress';
+ if(x.includes('GIFT CARD')) return 'https://cdn.simpleicons.org/gift';
+ return '';
 }
 function productLogo(p,c){
  const raw=(String(c.card_network||'')+' '+String(c.brand||'')+' '+String(p.brand||'')+' '+String(p.name||'')+' '+String(p.category||'')+' '+String(c.game||'')).toUpperCase();
- if(p.image_url) return `<img src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}" loading="lazy">`;
- let type='generic',mark='N',word='NEXVORA',sub='DIGITAL PRODUCT';
- if(raw.includes('GOOGLE PLAY')){type='google';mark='▶';word='Google Play';sub='GIFT CARD'}
- else if(raw.includes('STEAM')){type='steam';mark='◉';word='STEAM';sub='WALLET CODE'}
- else if(raw.includes('AMAZON')){type='amazon';mark='a';word='amazon';sub='GIFT CARD'}
- else if(raw.includes('ROBLOX')){type='roblox';mark='■';word='ROBLOX';sub='GIFT CARD'}
- else if(raw.includes('FREE FIRE')){type='freefire';mark='◆';word='FREE FIRE';sub='DIAMONDS / TOP UP'}
- else if(raw.includes('VISA')){type='visa';mark='VISA';word='VISA';sub='VIRTUAL CARD'}
- else if(raw.includes('MASTERCARD')){type='mastercard';mark='MC';word='Mastercard';sub='VIRTUAL CARD'}
- else if(raw.includes('RUPAY')){type='rupay';mark='RuPay';word='RuPay';sub='VIRTUAL CARD'}
- else if(raw.includes('AMEX')||raw.includes('AMERICAN EXPRESS')){type='amex';mark='AMEX';word='AMERICAN EXPRESS';sub='VIRTUAL CARD'}
- else if(raw.includes('GIFT CARD')){type='gift';mark='GC';word='GIFT CARD';sub='DIGITAL DELIVERY'}
- return `<div class="brand-visual ${type}"><div class="brand-mark">${esc(mark)}</div><div class="brand-word">${esc(word)}</div><div class="brand-sub">${esc(sub)}</div></div>`;
+ if(p.image_url) return `<img class="real-product-image" src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}" loading="lazy">`;
+ const logo=brandLogoUrl(raw);
+ if(logo){
+   return `<div class="real-brand"><img src="${logo}" alt="${esc(p.name||'Brand')} logo" loading="lazy"><span>${esc(p.brand||p.name||'')}</span></div>`;
+ }
+ return `<div class="real-brand generic-brand"><div>N</div><span>${esc(p.brand||p.category||'DIGITAL PRODUCT')}</span></div>`;
 }
 function productCard(p){
   const c=p.custom_fields&&typeof p.custom_fields==='object'&&!Array.isArray(p.custom_fields)?p.custom_fields:{};
