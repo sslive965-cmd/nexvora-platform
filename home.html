@@ -31,6 +31,40 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
 
 .membership-home .home-qty{font-size:15px;line-height:1.25}.membership-diamonds .home-diamond{transform:scale(.78)}.price-buy{font-weight:800}
 @media(max-width:1100px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}.categories{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.top{height:62px;padding:0 10px;gap:8px}.brand{min-width:auto;font-size:17px;letter-spacing:1px}.brand:before{width:31px;height:31px;margin-right:5px}.brand small{display:none}.nav{gap:3px;overflow-x:auto;justify-content:flex-start}.nav a{padding:8px 7px;font-size:8px}.nav a span{display:none}.nav i{font-size:14px}.profile{display:flex!important}.hero{min-height:330px}.hero-inner{padding:42px 22px}.hero-art{opacity:.42;width:52%}.categories{grid-template-columns:repeat(2,1fr);gap:8px}.cat{min-height:100px}.trust{grid-template-columns:repeat(2,1fr)}.trust-item{padding:8px 4px;border-bottom:1px solid #42ff8b22}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.product .media{height:125px;flex-basis:125px;margin:6px}.product h3{font-size:11px}.pbody{padding:5px 8px 8px}.price{font-size:13px}.details,.price-buy{font-size:7px;padding:8px 3px}.brand-visual .brand-mark{width:58px;height:58px}.brand-visual.visa .brand-mark,.brand-visual.mastercard .brand-mark,.brand-visual.rupay .brand-mark,.brand-visual.amex .brand-mark{width:92px;height:58px}}
+
+/* REFERENCE PRODUCT GRID — individual item cards */
+.products{grid-template-columns:repeat(6,minmax(150px,1fr));gap:10px}
+.product{border-radius:12px;background:linear-gradient(160deg,#050b08,#010302);border-color:#42ff8b45}
+.product .media{height:155px;margin:7px;background:radial-gradient(circle at 50% 42%,#123d24,#020604 70%);border-color:#42ff8b30}
+.product .pbody{padding:10px 9px 10px}
+.product h3{font-size:13px;line-height:1.18;min-height:31px}
+.product .tag{font-size:8px}
+.category-line{font-size:9px;min-height:20px}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.home-actions .details,.home-actions .price-buy{padding:9px 4px;border-radius:7px;text-align:center;font:800 8px Orbitron;text-decoration:none}
+.brand-visual{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;background:radial-gradient(circle at 50% 38%,#0e2418,#020604 72%);position:relative;overflow:hidden}
+.brand-visual:before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:#42ff8b0c;filter:blur(5px)}
+.brand-mark{position:relative;z-index:1;width:68px;height:68px;border-radius:18px;display:grid;place-items:center;border:1px solid #42ff8b66;background:linear-gradient(145deg,#102c1a,#020604);box-shadow:0 0 25px #42ff8b16,inset 0 0 20px #42ff8b0d;font:900 25px Arial;color:#fff}
+.brand-word{position:relative;z-index:1;font:800 13px Orbitron;letter-spacing:.3px}
+.brand-sub{position:relative;z-index:1;color:#8ba198;font:700 8px Orbitron;letter-spacing:1px}
+.brand-visual.google .brand-mark{border-color:#4a90e2;color:#fff;background:linear-gradient(135deg,#4285f4,#34a853 48%,#fbbc05 70%,#ea4335)}
+.brand-visual.steam .brand-mark{border-color:#9bb7d3;background:linear-gradient(145deg,#1b2838,#0b1621)}
+.brand-visual.amazon .brand-mark{border-color:#ff9900;color:#fff;background:#131313}
+.brand-visual.roblox .brand-mark{border-color:#fff;background:#050505}
+.brand-visual.freefire .brand-mark{border-color:#55c9ff;background:linear-gradient(145deg,#092c4b,#071018);color:#55c9ff}
+.brand-visual.visa .brand-mark{width:100px;border-radius:10px;background:linear-gradient(135deg,#172b85,#0d1b5a);color:#fff;font:900 20px Arial}
+.brand-visual.mastercard .brand-mark{width:100px;border-radius:10px;background:linear-gradient(90deg,#eb001b 0 50%,#f79e1b 50%);color:#fff;font:900 15px Arial}
+.brand-visual.rupay .brand-mark{width:100px;border-radius:10px;background:linear-gradient(135deg,#0055a5,#f58220);color:#fff;font:900 17px Arial}
+.brand-visual.amex .brand-mark{width:100px;border-radius:10px;background:#1769aa;color:#fff;font:900 14px Arial}
+.brand-visual.gift .brand-mark{border-color:#42ff8b;background:linear-gradient(145deg,#0e3a21,#06140b)}
+.cat-icon{font-family:Arial;font-weight:900}
+.cat-google{background:linear-gradient(135deg,#4285f4,#34a853,#fbbc05,#ea4335);color:#fff;border:0}
+.cat-steam{background:#1b2838;color:#d6e8ff}
+.cat-amazon{background:#131313;color:#ff9900}
+.cat-roblox{background:#050505;color:#fff}
+.cat-ff{background:linear-gradient(145deg,#0c3855,#05131f);color:#5ed6ff}
+@media(max-width:1100px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.product .media{height:135px}.product h3{font-size:11px}.brand-mark{width:58px;height:58px}.brand-visual.visa .brand-mark,.brand-visual.mastercard .brand-mark,.brand-visual.rupay .brand-mark,.brand-visual.amex .brand-mark{width:86px;height:52px}}
 </style>
 </head>
 <body>
@@ -62,11 +96,11 @@ footer{margin-top:20px;border-top:1px solid #42ff8b30;padding:19px 3%;display:fl
   <section id="categories">
     <div class="section-head"><h2>POPULAR CARD CATEGORIES</h2><span>SELECT CATEGORY ›</span></div>
     <div class="categories">
-      <a class="cat" href="store.html?category=TOPUP&game=Free%20Fire"><div class="cat-icon">↗</div><strong>Top Up</strong><small>Game top up</small><em>›</em></a>
-      <a class="cat" href="store.html?category=GOOGLE%20PLAY%20STORE%20CODE"><div class="cat-icon">▶</div><strong>Google Play Cards</strong><small>Play Store</small><em>›</em></a>
-      <a class="cat" href="store.html?category=STEAM%20CARDS"><div class="cat-icon">◉</div><strong>Steam Cards</strong><small>Steam wallet</small><em>›</em></a>
-      <a class="cat" href="store.html?category=AMAZON%20GIFT%20CARD"><div class="cat-icon">a</div><strong>Amazon Cards</strong><small>Amazon gift cards</small><em>›</em></a>
-      <a class="cat" href="store.html?category=ROBLOX%20CARD"><div class="cat-icon">■</div><strong>Roblox Cards</strong><small>Robux cards</small><em>›</em></a>
+      <a class="cat" href="store.html?category=TOPUP&game=Free%20Fire"><div class="cat-icon cat-ff">◆</div><strong>Top Up</strong><small>Game top up</small><em>›</em></a>
+      <a class="cat" href="store.html?category=GOOGLE%20PLAY%20STORE%20CODE"><div class="cat-icon cat-google">▶</div><strong>Google Play Cards</strong><small>Play Store</small><em>›</em></a>
+      <a class="cat" href="store.html?category=STEAM%20CARDS"><div class="cat-icon cat-steam">◉</div><strong>Steam Cards</strong><small>Steam wallet</small><em>›</em></a>
+      <a class="cat" href="store.html?category=AMAZON%20GIFT%20CARD"><div class="cat-icon cat-amazon">a</div><strong>Amazon Cards</strong><small>Amazon gift cards</small><em>›</em></a>
+      <a class="cat" href="store.html?category=ROBLOX%20CARD"><div class="cat-icon cat-roblox">■</div><strong>Roblox Cards</strong><small>Robux cards</small><em>›</em></a>
       <a class="cat" href="store.html?view=all"><div class="cat-icon">▦</div><strong>Other Cards</strong><small>More categories</small><em>›</em></a>
     </div>
   </section>
@@ -146,18 +180,24 @@ function brandVisual(p,c){
   else if(raw.includes('AMEX')||raw.includes('AMERICAN EXPRESS')){type='amex';mark='AMEX';word='AMEX';sub='VIRTUAL CARD'}
   return `<div class="brand-visual ${type}"><div class="brand-mark">${esc(mark)}</div><div class="brand-word">${esc(word)}</div><div class="brand-sub">${esc(sub)}</div></div>`;
 }
+function productLogo(p,c){
+ const raw=(String(c.card_network||'')+' '+String(c.brand||'')+' '+String(p.brand||'')+' '+String(p.name||'')+' '+String(p.category||'')+' '+String(c.game||'')).toUpperCase();
+ if(p.image_url) return `<img src="${esc(p.image_url)}" alt="${esc(p.name||'Product')}" loading="lazy">`;
+ let type='generic',mark='N',word='NEXVORA',sub='DIGITAL PRODUCT';
+ if(raw.includes('GOOGLE PLAY')){type='google';mark='▶';word='Google Play';sub='GIFT CARD'}
+ else if(raw.includes('STEAM')){type='steam';mark='◉';word='STEAM';sub='WALLET CODE'}
+ else if(raw.includes('AMAZON')){type='amazon';mark='a';word='amazon';sub='GIFT CARD'}
+ else if(raw.includes('ROBLOX')){type='roblox';mark='■';word='ROBLOX';sub='GIFT CARD'}
+ else if(raw.includes('FREE FIRE')){type='freefire';mark='◆';word='FREE FIRE';sub='DIAMONDS / TOP UP'}
+ else if(raw.includes('VISA')){type='visa';mark='VISA';word='VISA';sub='VIRTUAL CARD'}
+ else if(raw.includes('MASTERCARD')){type='mastercard';mark='MC';word='Mastercard';sub='VIRTUAL CARD'}
+ else if(raw.includes('RUPAY')){type='rupay';mark='RuPay';word='RuPay';sub='VIRTUAL CARD'}
+ else if(raw.includes('AMEX')||raw.includes('AMERICAN EXPRESS')){type='amex';mark='AMEX';word='AMERICAN EXPRESS';sub='VIRTUAL CARD'}
+ else if(raw.includes('GIFT CARD')){type='gift';mark='GC';word='GIFT CARD';sub='DIGITAL DELIVERY'}
+ return `<div class="brand-visual ${type}"><div class="brand-mark">${esc(mark)}</div><div class="brand-word">${esc(word)}</div><div class="brand-sub">${esc(sub)}</div></div>`;
+}
 function productCard(p){
   const c=p.custom_fields&&typeof p.custom_fields==='object'&&!Array.isArray(p.custom_fields)?p.custom_fields:{};
-  if(String(p.category||'').toUpperCase()==='TOPUP' && String(c.game||'').toUpperCase()==='FREE FIRE'){
-    const raw=String(c.package||c.denomination||p.name||'DIAMONDS');
-    const m=raw.match(/[0-9]+(?:\.[0-9]+)?/g)||[];
-    const qty=m[0]||raw;
-    const type=String(c.package_type||'DIAMONDS').toUpperCase();
-    const isMembership=type.includes('WEEKLY')||type.includes('MONTHLY');
-    const label=isMembership?type.replace(' MEMBERSHIP',' MEMBERSHIP'):(qty+' '+String(c.topup_unit||'DIAMONDS').toUpperCase());
-    const ds=Array.from({length:isMembership?5:7},(_,i)=>`<span class="home-diamond d${i+1}"></span>`).join('');
-    return `<a class="topup-home ${isMembership?'membership-home':''}" href="product.html?id=${encodeURIComponent(p.id)}"><div class="home-price">₹${money(p.price)}</div><div class="home-info"><div class="home-game">FREE FIRE TOP UP</div><div class="home-qty">${esc(label)}</div><div class="home-sub">${isMembership?'Membership • UID + Region':'Tap to select • UID + Region'}</div></div><div class="home-diamonds ${isMembership?'membership-diamonds':''}">${ds}</div></a>`;
-  }
   const image=productLogo(p,c);
   const category=String(p.category||'DIGITAL PRODUCT').replace(/_/g,' ');
   return `<article class="product"><div class="media"><span class="product-badge">IN STOCK</span>${image}</div><div class="pbody"><div class="tag">${esc(category)}</div><h3>${esc(p.name||'UNNAMED PRODUCT')}</h3><div class="category-line">${esc(c.region||c.delivery||'Digital product • Secure delivery')}</div><div class="pfoot"><div><div class="price">₹${money(p.price)}</div><div class="stock">● AVAILABLE</div></div></div><div class="home-actions"><a class="details" href="product.html?id=${encodeURIComponent(p.id)}">DETAILS</a><a class="buy price-buy" href="payment.html?product_id=${encodeURIComponent(p.id)}&amount=${encodeURIComponent(p.price)}&mode=product">₹${money(p.price)}</a></div></div></article>`;
