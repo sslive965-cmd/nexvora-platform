@@ -197,7 +197,9 @@ function render(rows){
 }
 
 
+let topupUidVerified=false;
 function renderTopupHero(game){
+ topupUidVerified=false;
  if(norm(game)!=='FREE FIRE'){topupHero.innerHTML='';return}
  topupHero.innerHTML=`<section class="ff-topup-hero"><div class="uid-panel">
    <div class="uid-label">ENTER YOUR FREE FIRE UID</div>
@@ -207,12 +209,13 @@ function renderTopupHero(game){
    <label class="region-row">Region <select id="ffRegion"><option value="India">India (IN)</option></select><b>India Server</b></label>
  </div></section>`;
  const uid=document.getElementById('ffUid'),verify=document.getElementById('ffVerify'),msg=document.getElementById('uidMessage');
- verify.onclick=()=>{if(!/^\d{5,15}$/.test(uid.value.trim())){msg.textContent='Please enter a valid UID.';msg.classList.add('bad');return}msg.textContent='Verified • India server connected • Player UID found • Ready';msg.classList.remove('bad');document.getElementById('uidFound').textContent='FOUND';document.getElementById('uidStatus').textContent='VERIFIED'};
+ uid.addEventListener('input',()=>{topupUidVerified=false;document.getElementById('uidFound').textContent='NOT VERIFIED';document.getElementById('uidStatus').textContent='READY';msg.textContent='Enter your UID and tap VERIFY.';msg.classList.remove('bad')});
+ verify.onclick=()=>{if(!/^\d{5,15}$/.test(uid.value.trim())){topupUidVerified=false;msg.textContent='Please enter a valid UID (5–15 digits).';msg.classList.add('bad');return}topupUidVerified=true;msg.textContent='UID format verified • India region selected • Ready to continue';msg.classList.remove('bad');document.getElementById('uidFound').textContent='FORMAT OK';document.getElementById('uidStatus').textContent='READY'};
 }
 
 function proceedTopup(p){
  const uid=document.getElementById('ffUid')?.value.trim(),region=document.getElementById('ffRegion')?.value||'India';
- if(!/^\\d{5,15}$/.test(uid||'')){alert('Please enter your Free Fire Player ID first.');document.getElementById('ffUid')?.focus();return}
+ if(!topupUidVerified||!/^\d{5,15}$/.test(uid||'')){alert('Please enter your Free Fire UID and tap VERIFY first.');document.getElementById('ffUid')?.focus();return}
  location.href='payment.html?product_id='+encodeURIComponent(p.id)+'&amount='+encodeURIComponent(p.price)+'&mode=product&game=FREE%20FIRE&game_uid='+encodeURIComponent(uid)+'&region='+encodeURIComponent(region);
 }
 
